@@ -64,17 +64,9 @@
 
         button.submit { width: 100%; background: var(--success); color: white; padding: 14px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 16px; transition: opacity 0.2s; }
         button.submit:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0.7; }
-
-        #keyScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-main); padding: 20px; }
     </style>
 </head>
 <body>
-
-<div id="keyScreen">
-    <h3 style="margin-bottom: 12px;">Masukkan Kunci Akses</h3>
-    <input type="password" id="accessKey" placeholder="Kunci..." style="padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-input); color:var(--text-main); width:220px; text-align:center;">
-    <button onclick="saveKey()" style="margin-top:12px; padding:12px 24px; border-radius:8px; border:none; background:var(--success); color:white; font-weight:600; cursor:pointer;">Masuk</button>
-</div>
 
 <div class="container">
     <h2>Input Mang Unyil</h2>
@@ -150,13 +142,6 @@
         document.getElementById('previewSubtotal').innerText = formatRupiah(q * h);
     }
 
-    function saveKey() {
-        const k = document.getElementById('accessKey').value.trim();
-        if(k) { localStorage.setItem('unyil_key', k); document.getElementById('keyScreen').style.display = 'none'; }
-    }
-    
-    if(localStorage.getItem('unyil_key')) document.getElementById('keyScreen').style.display = 'none';
-
     function showForm(type, evt) {
         document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
         document.querySelectorAll('.tab button').forEach(b => b.classList.remove('active'));
@@ -193,7 +178,7 @@
             const div = document.createElement('div');
             div.className = 'cart-item';
             div.innerHTML = `<span><b>${item.b}</b> (${item.q}x @ ${formatRupiah(item.h)})<br><span style="color:var(--accent); font-size:0.8rem;">Subtotal: ${formatRupiah(subtotal)}</span></span> 
-                           <button class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>`;
+                             <button class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>`;
             list.appendChild(div);
         });
     }
@@ -215,7 +200,7 @@
             let div = document.createElement('div');
             div.style.cssText = "background:var(--bg-input); padding:8px 10px; margin-top:6px; border-radius:6px; font-size:0.85em; display:flex; justify-content:space-between; align-items:center; border: 1px solid var(--border);";
             div.innerHTML = `<span><b>[${item.waktu}]</b> ${item.text}</span>
-                           <button onclick="hapusRiwayat(${item.id})" class="btn-delete">Hapus</button>`;
+                             <button onclick="hapusRiwayat(${item.id})" class="btn-delete">Hapus</button>`;
             container.appendChild(div);
         });
     }
@@ -238,7 +223,6 @@
 
         document.getElementById('cartData').value = JSON.stringify(cart);
         const fd = new FormData(document.getElementById('belanjaForm'));
-        fd.append('key', localStorage.getItem('unyil_key'));
 
         let plainObj = {};
         fd.forEach((value, key) => plainObj[key] = value);
@@ -268,7 +252,6 @@
         btn.textContent = 'Memproses...';
 
         const fd = new FormData(document.getElementById('transferForm'));
-        fd.append('key', localStorage.getItem('unyil_key'));
 
         let plainObj = {};
         fd.forEach((value, key) => plainObj[key] = value);
