@@ -63,7 +63,7 @@
     <div id="status" style="margin-top:15px; text-align:center; font-size:0.9em; font-weight:bold;"></div>
 </div>
 
-<script>
+    <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyPwPC3Egm8ogzLIi_WrpTfFYo_OhhnrzR7dDo2HqzmNXmSu8wazOdSwelNH8_A2zQpjw/exec';
     let cart = [];
 
@@ -106,75 +106,133 @@
         });
     }
 
-    // FORM BELANJA (SUPPORT OFFLINE & KERANJANG)
-    document.getElementById('belanjaForm').addEventListener('submit', e => {
+    // --- FITUR RIWAYAT (HISTORY) ---
+    function simpanKeRiwayat(teksRangkuman) {
+        let history = JSON.parse(localStorage.getItem('unyilHistory') || '[]');
+        history.unshift({ id: Date.now(), text: teksRangkuman, waktu: new Date().toLocaleString() });
+        localStorage.setItem('unyilHistory', JSON.stringify(history));
+        renderRiwayat();
+    }
+
+    function renderRiwayat() {
+        let history = JSON.parse(localStorage.getItem('unyilHistory') || '[]');
+        let container = document.getElementById('riwayatList');
+        if (!container) return;
+        container.innerHTML = '';
+        history.forEach((item) => {
+            let div = document.createElement('div');
+            div.style.cssText = "background:#f1f2f6; padding:8px; margin-top:6px; border-radius:6px; font-size:0.85em; display:flex; justify-content:space-between; align-items:center;";
+            div.innerHTML = `<span><b>[${item.waktu}]</b> ${item.text}</span>
+                             <button onclick="hapusRiwayat(${item.id})" style="background:#e74c3c; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Hapus</button>`;
+            container.appendChild(div);
+        });
+    }
+
+    window.hapusRiwayat = function(id) {
+        let history = JSON.parse(localStorage.getItem('unyilHistory') || '[]');
+        history = history.filter(item => item.id !== id);
+        localStorage.setItem('unyilHistory', JSON.stringify(history));
+        renderRiwayat();
+    }
+
+    // FORM BELANJA
+    document.getElementById('belanjaForm').addEventListener('submit', async e => {
         e.preventDefault();
-        if (cart.length === 0) {
-            alert('Nota masih kosong!');
-            return;
-        }
+        if (cart.length === 0) { alert('Nota masih kosong!'); return; }
+
+        const btn = document.getElementById('btnKirimBelanja');
+        btn.disabled = true; // ANTI DOUBLE-KLIK: Kunci tombol
+        btn.textContent = 'Memproses...';
 
         document.getElementById('cartData').value = JSON.stringify(cart);
         const fd = new FormData(document.getElementById('belanjaForm'));
         fd.append('key', localStorage.getItem('unyil_key'));
 
-        // CEK APAKAH OFFLINE
-        if (!navigator.onLine) {
-            let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-            let plainObj = {};
-            fd.forEach((value, key) => plainObj[key] = value);
-            offlineQueue.push(plainObj);
-            localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
+        let plainObj = {};
+        fd.forEach((value, key) => plainObj[key] = value);
 
-            document.getElementById('status').style.color = '#e67e22';
-            document.getElementById('status').textContent = '⚠️ Offline: Nota disimpan di HP, bakal terkirim pas ada sinyal!';
-            cart = [];
-            renderCart();
-            document.getElementById('belanjaForm').reset();
-            resetTanggal();
-            return;
-        }
+        // Masuk antrean lokal dulu (Background Sync concept)
+        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
+        offlineQueue.push(plainObj);
+        localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
 
-        // JIKA ONLINE
-        fetch(scriptURL, {method:'POST', mode:'no-cors', body:fd}).then(() => {
-            document.getElementById('status').style.color = '#27ae60';
-            document.getElementById('status').textContent = '✅ Nota Berhasil Terkirim!';
-            cart = [];
-            renderCart();
-            document.getElementById('belanjaForm').reset();
-            resetTanggal();
-        }).catch(err => {
-            alert('Gagal kirim: ' + err);
-        });
+        // Rangkuman buat riwayat
+        let ringkasan = `Belanja ${cart.length} item`;
+        simpanKeRiwayat(ringkasan);
+
+        // Reset form & cart
+        cart = [];
+        renderCart();
+        document.getElementById('belanjaForm').reset();
+        resetTanggal();
+
+        // Eksekusi sync di latar belakang
+        await prosesSyncBackground();
+
+        btn.disabled = false;
+        btn.textContent = 'Kirim Nota ke Sheet';
     });
 
     // FORM TRANSFER
-    document.getElementById('transferForm').addEventListener('submit', e => {
+    document.getElementById('transferForm').addEventListener('submit', async e => {
         e.preventDefault();
+        const btn = document.getElementById('btnKirimTransfer');
+        btn.disabled = true; // ANTI DOUBLE-KLIK
+        btn.textContent = 'Memproses...';
+
         const fd = new FormData(document.getElementById('transferForm'));
         fd.append('key', localStorage.getItem('unyil_key'));
 
-        if (!navigator.onLine) {
-            let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-            let plainObj = {};
-            fd.forEach((value, key) => plainObj[key] = value);
-            offlineQueue.push(plainObj);
-            localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
+        let plainObj = {};
+        fd.forEach((value, key) => plainObj[key] = value);
 
-            document.getElementById('status').style.color = '#e67e22';
-            document.getElementById('status').textContent = '⚠️ Offline: Data transfer disimpan di HP!';
-            document.getElementById('transferForm').reset();
-            resetTanggal();
-            return;
+        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
+        offlineQueue.push(plainObj);
+        localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
+
+        let nominal = document.querySelector('#transferForm [name="nominal"]').value;
+        simpanKeRiwayat(`Transfer Rp ${nominal}`);
+
+        document.getElementById('transferForm').reset();
+        resetTanggal();
+
+        await prosesSyncBackground();
+
+        btn.disabled = false;
+        btn.textContent = 'Kirim Transfer';
+    });
+
+    // BACKGROUND SYNC ENGINE
+    async function prosesSyncBackground() {
+        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
+        if (offlineQueue.length === 0) return;
+
+        document.getElementById('status').style.color = '#2980b9';
+        document.getElementById('status').textContent = '🔄 Menyinkronkan data di latar belakang...';
+
+        let sisaQueue = [];
+        for (let data of offlineQueue) {
+            let fd = new FormData();
+            for (let k in data) fd.append(k, data[k]);
+            try {
+                let res = await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: fd });
+                // Kalau sukses terkirim, tidak dimasukkan ke sisaQueue
+            } catch(e) {
+                // Kalau gagal/error karena offline, simpan lagi ke antrean
+                sisaQueue.push(data);
+            }
         }
 
-        fetch(scriptURL, {method:'POST', mode:'no-cors', body:fd}).then(() => {
+        localStorage.setItem('unyilQueue', JSON.stringify(sisaQueue));
+
+        if (sisaQueue.length === 0) {
             document.getElementById('status').style.color = '#27ae60';
-            document.getElementById('status').textContent = '✅ Transfer Berhasil Terkirim!';
-            document.getElementById('transferForm').reset();
-            resetTanggal();
-        });
-    });
+            document.getElementById('status').textContent = '✅ Semua data sukses terkirim ke Sheet!';
+        } else {
+            document.getElementById('status').style.color = '#e67e22';
+            document.getElementById('status').textContent = '⚠️ Sebagian data tersimpan di antrean (Menunggu sinyal stabil).';
+        }
+    }
 
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('tglBelanja').value = today;
@@ -185,24 +243,14 @@
         document.getElementById('tglTransfer').value = today;
     }
 
-    // AUTO-SYNC PAS ONLINE LAGI
-    window.addEventListener('online', async () => {
-        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-        if (offlineQueue.length > 0) {
-            document.getElementById('status').style.color = '#2980b9';
-            document.getElementById('status').textContent = '🔄 Ada sinyal! Mengirim data offline...';
-            
-            for (let data of offlineQueue) {
-                let fd = new FormData();
-                for (let k in data) fd.append(k, data[k]);
-                try {
-                    await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: fd });
-                } catch(e) { console.log(e); }
-            }
-            localStorage.removeItem('unyilQueue');
-            document.getElementById('status').style.color = '#27ae60';
-            document.getElementById('status').textContent = '✨ Semua data offline sudah sukses tersinkron ke Sheet!';
-        }
+    // Auto sync kalau online kembali
+    window.addEventListener('online', () => {
+        prosesSyncBackground();
+    });
+
+    // Render riwayat saat pertama kali buka
+    window.addEventListener('DOMContentLoaded', () => {
+        renderRiwayat();
     });
 
     if ('serviceWorker' in navigator) {
