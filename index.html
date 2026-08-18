@@ -6,33 +6,29 @@
     <title>Input Mang Unyil</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        body { font-family: sans-serif; background: #fdfbf7; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 400px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: auto; }
-        h2 { text-align: center; color: #2c3e50; }
-        .tab { display: flex; margin-bottom: 20px; }
-        .tab button { flex: 1; padding: 10px; cursor: pointer; border: none; background: #e0e0e0; font-weight: bold; }
-        .tab button.active { background: #3498db; color: white; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fdfbf7; margin: 0; padding: 15px; color: #333; }
+        .container { max-width: 450px; background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: auto; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        .tab { display: flex; margin-bottom: 20px; border-bottom: 2px solid #eee; }
+        .tab button { flex: 1; padding: 12px; cursor: pointer; border: none; background: transparent; font-weight: bold; color: #95a5a6; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+        .tab button.active { color: #3498db; border-bottom: 2px solid #3498db; }
         .form-section { display: none; }
         .form-section.active { display: block; }
-        label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.9em; }
-        input { width: 100%; padding: 12px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
-        button.submit { width: 100%; background: #27ae60; color: white; padding: 15px; border: none; border-radius: 6px; margin-top: 20px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        button.submit:disabled { background: #95a5a6; }
-        #status { text-align: center; margin-top: 15px; font-weight: bold; }
-        
-        /* Layar Kunci / Key Screen */
-        #keyScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2c3e50; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px; box-sizing: border-box; }
-        #keyScreen input { max-width: 300px; text-align: center; font-size: 18px; margin-bottom: 10px; color: #333; }
-        #keyScreen button { background: #27ae60; color: white; padding: 12px 20px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.85em; color: #7f8c8d; }
+        input { width: 100%; padding: 12px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .nota-box { background: #f9f9f9; padding: 15px; border-radius: 12px; margin: 20px 0; border: 1px dashed #ccc; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 0.9em; }
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
+        button.submit { width: 100%; background: #27ae60; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        #keyScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2c3e50; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px; }
     </style>
 </head>
 <body>
 
-<!-- Layar Masuk Kunci Pertama Kali -->
 <div id="keyScreen">
     <h3>Masukkan Kunci Akses</h3>
-    <input type="password" id="accessKey" placeholder="Kunci Akses...">
-    <button onclick="saveKey()">Masuk</button>
+    <input type="password" id="accessKey" placeholder="Kunci..." style="padding:10px; border-radius:6px; border:none; width:200px; text-align:center;">
+    <button onclick="saveKey()" style="margin-top:10px; padding:10px 20px; border-radius:6px; border:none; background:#27ae60; color:white; cursor:pointer;">Masuk</button>
 </div>
 
 <div class="container">
@@ -42,61 +38,41 @@
         <button onclick="showForm('transfer', event)">Transfer</button>
     </div>
 
-    <!-- Form Belanja -->
     <form id="belanjaForm" class="form-section active">
         <input type="hidden" name="type" value="belanja">
-        <label>Tanggal:</label> 
-        <input type="date" name="tgl" id="tglBelanja" required>
-        <label>Qty:</label> 
-        <input type="number" name="qty" required>
-        <label>Nama Barang:</label> 
-        <input type="text" name="namaBarang" required>
-        <label>Harga:</label> 
-        <input type="number" name="harga" required>
-        <button type="submit" class="submit">Kirim Belanja</button>
+        <label>Tanggal:</label> <input type="date" name="tgl" id="tglBelanja" required>
+        
+        <div class="nota-box">
+            <label>Barang:</label> <input type="text" id="itemBarang">
+            <label>Qty:</label> <input type="number" id="itemQty">
+            <label>Harga:</label> <input type="number" id="itemHarga">
+            <button type="button" onclick="addToCart()" style="width:100%; margin-top:15px; padding:10px; background:#34495e; color:white; border:none; border-radius:8px;">Tambah ke Nota</button>
+            <div id="cartList" style="margin-top:15px;"></div>
+        </div>
+        <input type="hidden" name="cartData" id="cartData">
+        <button type="submit" class="submit">Kirim Nota ke Sheet</button>
     </form>
 
-    <!-- Form Transfer -->
     <form id="transferForm" class="form-section">
         <input type="hidden" name="type" value="transfer">
-        <label>Tanggal:</label> 
-        <input type="date" name="tgl" id="tglTransfer" required>
-        <label>Nominal:</label> 
-        <input type="number" name="nominal" required>
-        <label>Rincian:</label> 
-        <input type="text" name="rincian" placeholder="Misal: BCA Transfer" required>
+        <label>Tanggal:</label> <input type="date" name="tgl" id="tglTransfer" required>
+        <label>Nominal:</label> <input type="number" name="nominal" required>
+        <label>Rincian:</label> <input type="text" name="rincian" placeholder="Misal: BCA Transfer" required>
         <button type="submit" class="submit">Kirim Transfer</button>
     </form>
-
-    <div id="status"></div>
+    <div id="status" style="margin-top:15px; text-align:center; font-size:0.9em; font-weight:bold;"></div>
 </div>
 
 <script>
-    // Ganti dengan URL Web App dari Apps Script kamu
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyPwPC3Egm8ogzLIi_WrpTfFYo_OhhnrzR7dDo2HqzmNXmSu8wazOdSwelNH8_A2zQpjw/exec'; 
-
-    // Cek apakah kunci sudah pernah disimpan di HP
-    window.addEventListener('DOMContentLoaded', () => {
-        if (localStorage.getItem('unyil_key')) {
-            document.getElementById('keyScreen').style.display = 'none';
-        }
-    });
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyPwPC3Egm8ogzLIi_WrpTfFYo_OhhnrzR7dDo2HqzmNXmSu8wazOdSwelNH8_A2zQpjw/exec';
+    let cart = [];
 
     function saveKey() {
-        const keyInput = document.getElementById('accessKey').value.trim();
-        if (keyInput) {
-            // Simpan kunci ke HP, verifikasi valid atau tidaknya nanti di Backend Google Sheets
-            localStorage.setItem('unyil_key', keyInput);
-            document.getElementById('keyScreen').style.display = 'none';
-        } else {
-            alert('Masukkan kunci terlebih dahulu!');
-        }
+        const k = document.getElementById('accessKey').value.trim();
+        if(k) { localStorage.setItem('unyil_key', k); document.getElementById('keyScreen').style.display = 'none'; }
     }
-
-    // Set tanggal default hari ini
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('tglBelanja').value = today;
-    document.getElementById('tglTransfer').value = today;
+    
+    if(localStorage.getItem('unyil_key')) document.getElementById('keyScreen').style.display = 'none';
 
     function showForm(type, evt) {
         document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
@@ -105,82 +81,47 @@
         evt.currentTarget.classList.add('active');
     }
 
-    // Handle Submit Form & Offline Queue
-    document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', async e => {
-            e.preventDefault();
-            const btn = form.querySelector('button');
-            const statusDiv = document.getElementById('status');
-            
-            btn.disabled = true; 
-            btn.textContent = 'Mengirim...';
+    function addToCart() {
+        const b = document.getElementById('itemBarang').value;
+        const q = document.getElementById('itemQty').value;
+        const h = document.getElementById('itemHarga').value;
+        if(b && q && h) {
+            cart.push({b, q, h, id: Date.now()});
+            renderCart();
+            document.getElementById('itemBarang').value = '';
+            document.getElementById('itemQty').value = '';
+            document.getElementById('itemHarga').value = '';
+        }
+    }
 
-            const formData = new FormData(form);
-            // Selipkan kunci yang tersimpan di HP ke backend
-            formData.append('key', localStorage.getItem('unyil_key') || '');
+    function renderCart() {
+        const list = document.getElementById('cartList');
+        list.innerHTML = '';
+        cart.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'cart-item';
+            div.innerHTML = `<span>${item.b} (${item.q}x${item.h})</span> 
+                             <button class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>`;
+            list.appendChild(div);
+        });
+    }
 
-            if (!navigator.onLine) {
-                // Simpan ke antrean offline jika internet mati
-                let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-                let plainObj = {};
-                formData.forEach((value, key) => plainObj[key] = value);
-                offlineQueue.push(plainObj);
-                localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
-
-                statusDiv.style.color = '#e67e22';
-                statusDiv.textContent = 'Mode Offline: Data disimpan, bakal terkirim otomatis saat online!';
-                form.reset();
-                resetTanggal();
-                btn.disabled = false; 
-                btn.textContent = 'Kirim';
-                return;
-            }
-
-            try {
-                await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: formData });
-                statusDiv.style.color = '#27ae60';
-                statusDiv.textContent = 'Data berhasil dikirim!';
-                form.reset();
-                resetTanggal();
-            } catch (error) {
-                statusDiv.style.color = '#c0392b';
-                statusDiv.textContent = 'Gagal mengirim data!';
-            }
-            
-            btn.disabled = false; 
-            btn.textContent = 'Kirim';
+    document.getElementById('belanjaForm').addEventListener('submit', e => {
+        e.preventDefault();
+        document.getElementById('cartData').value = JSON.stringify(cart);
+        const fd = new FormData(document.getElementById('belanjaForm'));
+        fd.append('key', localStorage.getItem('unyil_key'));
+        fetch(scriptURL, {method:'POST', mode:'no-cors', body:fd}).then(() => {
+            alert('Nota Terkirim!'); cart = []; renderCart(); document.getElementById('belanjaForm').reset();
         });
     });
 
-    function resetTanggal() {
-        document.getElementById('tglBelanja').value = today;
-        document.getElementById('tglTransfer').value = today;
-    }
-
-    // Auto-Sync saat kembali online
-    window.addEventListener('online', async () => {
-        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-        if (offlineQueue.length > 0) {
-            document.getElementById('status').style.color = '#2980b9';
-            document.getElementById('status').textContent = 'Menyinkronkan data offline...';
-            
-            for (let data of offlineQueue) {
-                let fd = new FormData();
-                for (let k in data) fd.append(k, data[k]);
-                try {
-                    await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: fd });
-                } catch(e) { console.log(e); }
-            }
-            localStorage.removeItem('unyilQueue');
-            document.getElementById('status').style.color = '#27ae60';
-            document.getElementById('status').textContent = 'Semua data offline berhasil disinkron!';
-        }
+    document.getElementById('transferForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const fd = new FormData(document.getElementById('transferForm'));
+        fd.append('key', localStorage.getItem('unyil_key'));
+        fetch(scriptURL, {method:'POST', mode:'no-cors', body:fd}).then(() => alert('Transfer Terkirim!'));
     });
-
-    // PWA Service Worker Registration
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
 </script>
 </body>
 </html>
