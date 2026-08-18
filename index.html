@@ -106,22 +106,109 @@
         });
     }
 
+    // FORM BELANJA (SUPPORT OFFLINE & KERANJANG)
     document.getElementById('belanjaForm').addEventListener('submit', e => {
         e.preventDefault();
+        if (cart.length === 0) {
+            alert('Nota masih kosong!');
+            return;
+        }
+
         document.getElementById('cartData').value = JSON.stringify(cart);
         const fd = new FormData(document.getElementById('belanjaForm'));
         fd.append('key', localStorage.getItem('unyil_key'));
+
+        // CEK APAKAH OFFLINE
+        if (!navigator.onLine) {
+            let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
+            let plainObj = {};
+            fd.forEach((value, key) => plainObj[key] = value);
+            offlineQueue.push(plainObj);
+            localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
+
+            document.getElementById('status').style.color = '#e67e22';
+            document.getElementById('status').textContent = '⚠️ Offline: Nota disimpan di HP, bakal terkirim pas ada sinyal!';
+            cart = [];
+            renderCart();
+            document.getElementById('belanjaForm').reset();
+            resetTanggal();
+            return;
+        }
+
+        // JIKA ONLINE
         fetch(scriptURL, {method:'POST', mode:'no-cors', body:fd}).then(() => {
-            alert('Nota Terkirim!'); cart = []; renderCart(); document.getElementById('belanjaForm').reset();
+            document.getElementById('status').style.color = '#27ae60';
+            document.getElementById('status').textContent = '✅ Nota Berhasil Terkirim!';
+            cart = [];
+            renderCart();
+            document.getElementById('belanjaForm').reset();
+            resetTanggal();
+        }).catch(err => {
+            alert('Gagal kirim: ' + err);
         });
     });
 
+    // FORM TRANSFER
     document.getElementById('transferForm').addEventListener('submit', e => {
         e.preventDefault();
         const fd = new FormData(document.getElementById('transferForm'));
         fd.append('key', localStorage.getItem('unyil_key'));
-        fetch(scriptURL, {method:'POST', mode:'no-cors', body:fd}).then(() => alert('Transfer Terkirim!'));
+
+        if (!navigator.onLine) {
+            let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
+            let plainObj = {};
+            fd.forEach((value, key) => plainObj[key] = value);
+            offlineQueue.push(plainObj);
+            localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
+
+            document.getElementById('status').style.color = '#e67e22';
+            document.getElementById('status').textContent = '⚠️ Offline: Data transfer disimpan di HP!';
+            document.getElementById('transferForm').reset();
+            resetTanggal();
+            return;
+        }
+
+        fetch(scriptURL, {method:'POST', mode:'no-cors', body:fd}).then(() => {
+            document.getElementById('status').style.color = '#27ae60';
+            document.getElementById('status').textContent = '✅ Transfer Berhasil Terkirim!';
+            document.getElementById('transferForm').reset();
+            resetTanggal();
+        });
     });
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('tglBelanja').value = today;
+    document.getElementById('tglTransfer').value = today;
+
+    function resetTanggal() {
+        document.getElementById('tglBelanja').value = today;
+        document.getElementById('tglTransfer').value = today;
+    }
+
+    // AUTO-SYNC PAS ONLINE LAGI
+    window.addEventListener('online', async () => {
+        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
+        if (offlineQueue.length > 0) {
+            document.getElementById('status').style.color = '#2980b9';
+            document.getElementById('status').textContent = '🔄 Ada sinyal! Mengirim data offline...';
+            
+            for (let data of offlineQueue) {
+                let fd = new FormData();
+                for (let k in data) fd.append(k, data[k]);
+                try {
+                    await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: fd });
+                } catch(e) { console.log(e); }
+            }
+            localStorage.removeItem('unyilQueue');
+            document.getElementById('status').style.color = '#27ae60';
+            document.getElementById('status').textContent = '✨ Semua data offline sudah sukses tersinkron ke Sheet!';
+        }
+    });
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
 </script>
+
 </body>
 </html>
