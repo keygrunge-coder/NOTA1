@@ -3,263 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Mang Unyil</title>
-    <link rel="manifest" href="manifest.json">
+    <title>Input Belanja - ALDI</title>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fdfbf7; margin: 0; padding: 15px; color: #333; }
-        .container { max-width: 450px; background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: auto; }
-        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
-        .tab { display: flex; margin-bottom: 20px; border-bottom: 2px solid #eee; }
-        .tab button { flex: 1; padding: 12px; cursor: pointer; border: none; background: transparent; font-weight: bold; color: #95a5a6; border-bottom: 2px solid transparent; margin-bottom: -2px; }
-        .tab button.active { color: #3498db; border-bottom: 2px solid #3498db; }
-        .form-section { display: none; }
-        .form-section.active { display: block; }
-        label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.85em; color: #7f8c8d; }
-        input { width: 100%; padding: 12px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
-        .nota-box { background: #f9f9f9; padding: 15px; border-radius: 12px; margin: 20px 0; border: 1px dashed #ccc; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 0.9em; }
-        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
-        button.submit { width: 100%; background: #27ae60; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        button.submit:disabled { background: #95a5a6; cursor: not-allowed; }
-        #keyScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2c3e50; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px; }
+        :root {
+            --bg-main: #0B0F19;
+            --bg-card: #1E293B;
+            --bg-input: #0F172A;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --accent: #3B82F6;
+            --accent-hover: #2563EB;
+            --danger: #EF4444;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        header {
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+        }
+
+        .row-inputs {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 8px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px dashed var(--accent);
+            color: var(--accent);
+            margin-top: 8px;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Daftar Item di Keranjang */
+        .cart-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            margin-top: 8px;
+        }
+
+        .cart-item {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .item-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .item-detail {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px 8px;
+        }
+
+        .total-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            margin-top: 12px;
+            font-weight: 700;
+        }
+
+        .total-amount {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        /* Loading overlay sederhana */
+        #loading {
+            display: none;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
 
-<div id="keyScreen">
-    <h3>Masukkan Kunci Akses</h3>
-    <input type="password" id="accessKey" placeholder="Kunci..." style="padding:10px; border-radius:6px; border:none; width:200px; text-align:center;">
-    <button onclick="saveKey()" style="margin-top:10px; padding:10px 20px; border-radius:6px; border:none; background:#27ae60; color:white; cursor:pointer;">Masuk</button>
-</div>
+    <div class="container">
+        <header>
+            <h1>INPUT BELANJA ALDI</h1>
+            <p>Catat belanjaan dengan cepat & rapi</p>
+        </header>
 
-<div class="container">
-    <h2>Input Mang Unyil</h2>
-    <div class="tab">
-        <button class="active" onclick="showForm('belanja', event)">Belanja</button>
-        <button onclick="showForm('transfer', event)">Transfer</button>
-    </div>
-
-    <!-- FORM BELANJA -->
-    <form id="belanjaForm" class="form-section active">
-        <input type="hidden" name="type" value="belanja">
-        <label>Tanggal:</label> <input type="date" name="tgl" id="tglBelanja" required>
-        
-        <div class="nota-box">
-            <label>Barang:</label> <input type="text" id="itemBarang">
-            <label>Qty:</label> <input type="number" id="itemQty">
-            <label>Harga:</label> <input type="number" id="itemHarga">
-            <button type="button" onclick="addToCart()" style="width:100%; margin-top:15px; padding:10px; background:#34495e; color:white; border:none; border-radius:8px; cursor:pointer;">Tambah ke Nota</button>
-            <div id="cartList" style="margin-top:15px;"></div>
+        <!-- Form Input Header -->
+        <div class="card">
+            <div class="form-group">
+                <label>Tanggal Belanja</label>
+                <input type="date" id="tgl">
+            </div>
         </div>
-        <input type="hidden" name="cartData" id="cartData">
-        <button type="submit" id="btnKirimBelanja" class="submit">Kirim Nota ke Sheet</button>
-    </form>
 
-    <!-- FORM TRANSFER -->
-    <form id="transferForm" class="form-section">
-        <input type="hidden" name="type" value="transfer">
-        <label>Tanggal:</label> <input type="date" name="tgl" id="tglTransfer" required>
-        <label>Nominal:</label> <input type="number" name="nominal" required>
-        <label>Rincian:</label> <input type="text" name="rincian" placeholder="Misal: BCA Transfer" required>
-        <button type="submit" id="btnKirimTransfer" class="submit">Kirim Transfer</button>
-    </form>
+        <!-- Form Tambah Barang -->
+        <div class="card">
+            <div class="row-inputs">
+                <div class="form-group">
+                    <label>Qty</label>
+                    <input type="number" id="qty" placeholder="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label>Nama Barang</label>
+                    <input type="text" id="barang" placeholder="Nama barang...">
+                </div>
+                <div class="form-group">
+                    <label>Harga</label>
+                    <input type="number" id="harga" placeholder="0">
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="tambahItem()">+ Tambah ke Daftar</button>
+        </div>
 
-    <div id="status" style="margin-top:15px; text-align:center; font-size:0.9em; font-weight:bold;"></div>
+        <!-- Daftar Keranjang Belanja -->
+        <div class="card">
+            <label style="margin-bottom: 8px;">Daftar Item Belanja</label>
+            <div id="cartList" class="cart-list">
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px 0;">Belum ada item ditambahkan</div>
+            </div>
 
-    <!-- RIWAYAT AKTIVITAS -->
-    <div style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px;">
-        <h4 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 0.95em;">Riwayat Aktivitas:</h4>
-        <div id="riwayatList"></div>
+            <div class="total-section">
+                <span>Total Keseluruhan:</span>
+                <span id="grandTotal" class="total-amount">Rp 0</span>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="kirimData()" style="margin-top: 16px;">Kirim ke Spreadsheet</button>
+            <div id="loading">Sedang mengirim data...</div>
+        </div>
     </div>
-</div>
 
-<script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwLxiI9_vhSdKm6VJ7YwTo7Ee0miD5W6oGxX3hMOJa8xJegWxufwbFwVyYFrC7dy5DIlg/exec';
-    let cart = [];
+    <script>
+        // Set tanggal otomatis ke hari ini
+        document.getElementById('tgl').valueAsDate = new Date();
 
-    function saveKey() {
-        const k = document.getElementById('accessKey').value.trim();
-        if(k) { localStorage.setItem('unyil_key', k); document.getElementById('keyScreen').style.display = 'none'; }
-    }
-    
-    if(localStorage.getItem('unyil_key')) document.getElementById('keyScreen').style.display = 'none';
+        let cart = [];
+        const WEB_URL = "https://script.google.com/macros/s/AKfycbwLxiI9_vhSdKm6VJ7YwTo7Ee0miD5W6oGxX3hMOJa8xJegWxufwbFwVyYFrC7dy5DIlg/exec";
 
-    function showForm(type, evt) {
-        document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
-        document.querySelectorAll('.tab button').forEach(b => b.classList.remove('active'));
-        document.getElementById(type + 'Form').classList.add('active');
-        evt.currentTarget.classList.add('active');
-    }
-
-    function addToCart() {
-        const b = document.getElementById('itemBarang').value;
-        const q = document.getElementById('itemQty').value;
-        const h = document.getElementById('itemHarga').value;
-        if(b && q && h) {
-            cart.push({b, q, h, id: Date.now()});
-            renderCart();
-            document.getElementById('itemBarang').value = '';
-            document.getElementById('itemQty').value = '';
-            document.getElementById('itemHarga').value = '';
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
         }
-    }
 
-    function renderCart() {
-        const list = document.getElementById('cartList');
-        list.innerHTML = '';
-        cart.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = 'cart-item';
-            div.innerHTML = `<span>${item.b} (${item.q}x${item.h})</span> 
-                             <button class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>`;
-            list.appendChild(div);
-        });
-    }
+        function tambahItem() {
+            let q = document.getElementById('qty').value;
+            let b = document.getElementById('barang').value.trim();
+            let h = document.getElementById('harga').value;
 
-    // --- FITUR RIWAYAT ---
-    function simpanKeRiwayat(teksRangkuman) {
-        let history = JSON.parse(localStorage.getItem('unyilHistory') || '[]');
-        history.unshift({ id: Date.now(), text: teksRangkuman, waktu: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-        localStorage.setItem('unyilHistory', JSON.stringify(history));
-        renderRiwayat();
-    }
-
-    function renderRiwayat() {
-        let history = JSON.parse(localStorage.getItem('unyilHistory') || '[]');
-        let container = document.getElementById('riwayatList');
-        if (!container) return;
-        container.innerHTML = '';
-        history.forEach((item) => {
-            let div = document.createElement('div');
-            div.style.cssText = "background:#f9f9f9; padding:8px 10px; margin-top:6px; border-radius:6px; font-size:0.85em; display:flex; justify-content:space-between; align-items:center; border: 1px solid #eee;";
-            div.innerHTML = `<span><b>[${item.waktu}]</b> ${item.text}</span>
-                             <button onclick="hapusRiwayat(${item.id})" class="btn-delete">Hapus</button>`;
-            container.appendChild(div);
-        });
-    }
-
-    window.hapusRiwayat = function(id) {
-        let history = JSON.parse(localStorage.getItem('unyilHistory') || '[]');
-        history = history.filter(item => item.id !== id);
-        localStorage.setItem('unyilHistory', JSON.stringify(history));
-        renderRiwayat();
-    }
-
-    // --- SUBMIT BELANJA ---
-    document.getElementById('belanjaForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        if (cart.length === 0) { alert('Nota masih kosong!'); return; }
-
-        const btn = document.getElementById('btnKirimBelanja');
-        btn.disabled = true; // Kunci anti double-klik
-        btn.textContent = 'Memproses...';
-
-        document.getElementById('cartData').value = JSON.stringify(cart);
-        const fd = new FormData(document.getElementById('belanjaForm'));
-        fd.append('key', localStorage.getItem('unyil_key'));
-
-        let plainObj = {};
-        fd.forEach((value, key) => plainObj[key] = value);
-
-        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-        offlineQueue.push(plainObj);
-        localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
-
-        simpanKeRiwayat(`Belanja ${cart.length} item`);
-
-        cart = [];
-        renderCart();
-        document.getElementById('belanjaForm').reset();
-        resetTanggal();
-
-        await prosesSyncBackground();
-
-        btn.disabled = false;
-        btn.textContent = 'Kirim Nota ke Sheet';
-    });
-
-    // --- SUBMIT TRANSFER ---
-    document.getElementById('transferForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        const btn = document.getElementById('btnKirimTransfer');
-        btn.disabled = true; // Kunci anti double-klik
-        btn.textContent = 'Memproses...';
-
-        const fd = new FormData(document.getElementById('transferForm'));
-        fd.append('key', localStorage.getItem('unyil_key'));
-
-        let plainObj = {};
-        fd.forEach((value, key) => plainObj[key] = value);
-
-        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-        offlineQueue.push(plainObj);
-        localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
-
-        let nominal = document.querySelector('#transferForm [name="nominal"]').value;
-        simpanKeRiwayat(`Transfer Rp ${Number(nominal).toLocaleString()}`);
-
-        document.getElementById('transferForm').reset();
-        resetTanggal();
-
-        await prosesSyncBackground();
-
-        btn.disabled = false;
-        btn.textContent = 'Kirim Transfer';
-    });
-
-    // --- ENGINE SYNC LATAR BELAKANG ---
-    async function prosesSyncBackground() {
-        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-        if (offlineQueue.length === 0) return;
-
-        document.getElementById('status').style.color = '#2980b9';
-        document.getElementById('status').textContent = '🔄 Menyinkronkan data di latar belakang...';
-
-        let sisaQueue = [];
-        for (let data of offlineQueue) {
-            let fd = new FormData();
-            for (let k in data) fd.append(k, data[k]);
-            try {
-                await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: fd });
-            } catch(e) {
-                sisaQueue.push(data);
+            if (!b || !h || q <= 0) {
+                alert("Mohon isi Qty, Nama Barang, dan Harga dengan benar!");
+                return;
             }
+
+            cart.push({ q: Number(q), b: b, h: Number(h) });
+
+            // Reset input barang & harga (biar cepat input berikutnya)
+            document.getElementById('qty').value = "1";
+            document.getElementById('barang').value = "";
+            document.getElementById('harga').value = "";
+            document.getElementById('barang').focus();
+
+            renderCart();
         }
 
-        localStorage.setItem('unyilQueue', JSON.stringify(sisaQueue));
-
-        if (sisaQueue.length === 0) {
-            document.getElementById('status').style.color = '#27ae60';
-            document.getElementById('status').textContent = '✅ Semua data sukses terkirim ke Sheet!';
-        } else {
-            document.getElementById('status').style.color = '#e67e22';
-            document.getElementById('status').textContent = '⚠️ Tersimpan di antrean (Menunggu sinyal stabil).';
+        function hapusItem(index) {
+            cart.splice(index, 1);
+            renderCart();
         }
-    }
 
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('tglBelanja').value = today;
-    document.getElementById('tglTransfer').value = today;
+        function renderCart() {
+            let listEl = document.getElementById('cartList');
+            let grandTotalEl = document.getElementById('grandTotal');
 
-    function resetTanggal() {
-        document.getElementById('tglBelanja').value = today;
-        document.getElementById('tglTransfer').value = today;
-    }
+            if (cart.length === 0) {
+                listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px 0;">Belum ada item ditambahkan</div>`;
+                grandTotalEl.innerText = formatRupiah(0);
+                return;
+            }
 
-    window.addEventListener('online', () => {
-        prosesSyncBackground();
-    });
+            let html = "";
+            let totalSemua = 0;
 
-    window.addEventListener('DOMContentLoaded', () => {
-        renderRiwayat();
-        if (navigator.onLine) {
-            prosesSyncBackground();
+            cart.forEach((item, index) => {
+                let subtotal = item.q * item.h;
+                totalSemua += subtotal;
+                html += `
+                    <div class="cart-item">
+                        <div class="item-info">
+                            <span class="item-name">${item.b}</span>
+                            <span class="item-detail">${item.q}x @ ${formatRupiah(item.h)} = <b>${formatRupiah(subtotal)}</b></span>
+                        </div>
+                        <button class="btn-delete" onclick="hapusItem(${index})">&times;</button>
+                    </div>
+                `;
+            });
+
+            listEl.innerHTML = html;
+            grandTotalEl.innerText = formatRupiah(totalSemua);
         }
-    });
 
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
-</script>
+        function kirimData() {
+            if (cart.length === 0) {
+                alert("Keranjang masih kosong, bro!");
+                return;
+            }
+
+            let tgl = document.getElementById('tgl').value;
+            let loadingEl = document.getElementById('loading');
+
+            loadingEl.style.display = "block";
+
+            let params = new URLSearchParams();
+            params.append("key", "SRF");
+            params.append("type", "belanja");
+            params.append("tgl", tgl);
+            params.append("cartData", JSON.stringify(cart));
+
+            fetch(WEB_URL, {
+                method: "POST",
+                mode: "no-cors", // Menghindari CORS error dari Apps Script
+                body: params
+            })
+            .then(() => {
+                loadingEl.style.display = "none";
+                alert("Berhasil dikirim ke Spreadsheet, bro!");
+                cart = []; // Kosongkan keranjang
+                renderCart();
+            })
+            .catch(error => {
+                loadingEl.style.display = "none";
+                alert("Gagal mengirim data: " + error);
+            });
+        }
+    </script>
 </body>
 </html>
