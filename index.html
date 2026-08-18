@@ -20,6 +20,7 @@
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 0.9em; }
         .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
         button.submit { width: 100%; background: #27ae60; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button.submit:disabled { background: #95a5a6; cursor: not-allowed; }
         #keyScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2c3e50; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px; }
     </style>
 </head>
@@ -38,6 +39,7 @@
         <button onclick="showForm('transfer', event)">Transfer</button>
     </div>
 
+    <!-- FORM BELANJA -->
     <form id="belanjaForm" class="form-section active">
         <input type="hidden" name="type" value="belanja">
         <label>Tanggal:</label> <input type="date" name="tgl" id="tglBelanja" required>
@@ -46,24 +48,32 @@
             <label>Barang:</label> <input type="text" id="itemBarang">
             <label>Qty:</label> <input type="number" id="itemQty">
             <label>Harga:</label> <input type="number" id="itemHarga">
-            <button type="button" onclick="addToCart()" style="width:100%; margin-top:15px; padding:10px; background:#34495e; color:white; border:none; border-radius:8px;">Tambah ke Nota</button>
+            <button type="button" onclick="addToCart()" style="width:100%; margin-top:15px; padding:10px; background:#34495e; color:white; border:none; border-radius:8px; cursor:pointer;">Tambah ke Nota</button>
             <div id="cartList" style="margin-top:15px;"></div>
         </div>
         <input type="hidden" name="cartData" id="cartData">
-        <button type="submit" class="submit">Kirim Nota ke Sheet</button>
+        <button type="submit" id="btnKirimBelanja" class="submit">Kirim Nota ke Sheet</button>
     </form>
 
+    <!-- FORM TRANSFER -->
     <form id="transferForm" class="form-section">
         <input type="hidden" name="type" value="transfer">
         <label>Tanggal:</label> <input type="date" name="tgl" id="tglTransfer" required>
         <label>Nominal:</label> <input type="number" name="nominal" required>
         <label>Rincian:</label> <input type="text" name="rincian" placeholder="Misal: BCA Transfer" required>
-        <button type="submit" class="submit">Kirim Transfer</button>
+        <button type="submit" id="btnKirimTransfer" class="submit">Kirim Transfer</button>
     </form>
+
     <div id="status" style="margin-top:15px; text-align:center; font-size:0.9em; font-weight:bold;"></div>
+
+    <!-- RIWAYAT AKTIVITAS -->
+    <div style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px;">
+        <h4 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 0.95em;">Riwayat Aktivitas:</h4>
+        <div id="riwayatList"></div>
+    </div>
 </div>
 
-    <script>
+<script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyPwPC3Egm8ogzLIi_WrpTfFYo_OhhnrzR7dDo2HqzmNXmSu8wazOdSwelNH8_A2zQpjw/exec';
     let cart = [];
 
@@ -106,10 +116,10 @@
         });
     }
 
-    // --- FITUR RIWAYAT (HISTORY) ---
+    // --- FITUR RIWAYAT ---
     function simpanKeRiwayat(teksRangkuman) {
         let history = JSON.parse(localStorage.getItem('unyilHistory') || '[]');
-        history.unshift({ id: Date.now(), text: teksRangkuman, waktu: new Date().toLocaleString() });
+        history.unshift({ id: Date.now(), text: teksRangkuman, waktu: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
         localStorage.setItem('unyilHistory', JSON.stringify(history));
         renderRiwayat();
     }
@@ -121,9 +131,9 @@
         container.innerHTML = '';
         history.forEach((item) => {
             let div = document.createElement('div');
-            div.style.cssText = "background:#f1f2f6; padding:8px; margin-top:6px; border-radius:6px; font-size:0.85em; display:flex; justify-content:space-between; align-items:center;";
+            div.style.cssText = "background:#f9f9f9; padding:8px 10px; margin-top:6px; border-radius:6px; font-size:0.85em; display:flex; justify-content:space-between; align-items:center; border: 1px solid #eee;";
             div.innerHTML = `<span><b>[${item.waktu}]</b> ${item.text}</span>
-                             <button onclick="hapusRiwayat(${item.id})" style="background:#e74c3c; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Hapus</button>`;
+                             <button onclick="hapusRiwayat(${item.id})" class="btn-delete">Hapus</button>`;
             container.appendChild(div);
         });
     }
@@ -135,13 +145,13 @@
         renderRiwayat();
     }
 
-    // FORM BELANJA
+    // --- SUBMIT BELANJA ---
     document.getElementById('belanjaForm').addEventListener('submit', async e => {
         e.preventDefault();
         if (cart.length === 0) { alert('Nota masih kosong!'); return; }
 
         const btn = document.getElementById('btnKirimBelanja');
-        btn.disabled = true; // ANTI DOUBLE-KLIK: Kunci tombol
+        btn.disabled = true; // Kunci anti double-klik
         btn.textContent = 'Memproses...';
 
         document.getElementById('cartData').value = JSON.stringify(cart);
@@ -151,33 +161,28 @@
         let plainObj = {};
         fd.forEach((value, key) => plainObj[key] = value);
 
-        // Masuk antrean lokal dulu (Background Sync concept)
         let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
         offlineQueue.push(plainObj);
         localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
 
-        // Rangkuman buat riwayat
-        let ringkasan = `Belanja ${cart.length} item`;
-        simpanKeRiwayat(ringkasan);
+        simpanKeRiwayat(`Belanja ${cart.length} item`);
 
-        // Reset form & cart
         cart = [];
         renderCart();
         document.getElementById('belanjaForm').reset();
         resetTanggal();
 
-        // Eksekusi sync di latar belakang
         await prosesSyncBackground();
 
         btn.disabled = false;
         btn.textContent = 'Kirim Nota ke Sheet';
     });
 
-    // FORM TRANSFER
+    // --- SUBMIT TRANSFER ---
     document.getElementById('transferForm').addEventListener('submit', async e => {
         e.preventDefault();
         const btn = document.getElementById('btnKirimTransfer');
-        btn.disabled = true; // ANTI DOUBLE-KLIK
+        btn.disabled = true; // Kunci anti double-klik
         btn.textContent = 'Memproses...';
 
         const fd = new FormData(document.getElementById('transferForm'));
@@ -191,7 +196,7 @@
         localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
 
         let nominal = document.querySelector('#transferForm [name="nominal"]').value;
-        simpanKeRiwayat(`Transfer Rp ${nominal}`);
+        simpanKeRiwayat(`Transfer Rp ${Number(nominal).toLocaleString()}`);
 
         document.getElementById('transferForm').reset();
         resetTanggal();
@@ -202,7 +207,7 @@
         btn.textContent = 'Kirim Transfer';
     });
 
-    // BACKGROUND SYNC ENGINE
+    // --- ENGINE SYNC LATAR BELAKANG ---
     async function prosesSyncBackground() {
         let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
         if (offlineQueue.length === 0) return;
@@ -215,10 +220,8 @@
             let fd = new FormData();
             for (let k in data) fd.append(k, data[k]);
             try {
-                let res = await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: fd });
-                // Kalau sukses terkirim, tidak dimasukkan ke sisaQueue
+                await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: fd });
             } catch(e) {
-                // Kalau gagal/error karena offline, simpan lagi ke antrean
                 sisaQueue.push(data);
             }
         }
@@ -230,7 +233,7 @@
             document.getElementById('status').textContent = '✅ Semua data sukses terkirim ke Sheet!';
         } else {
             document.getElementById('status').style.color = '#e67e22';
-            document.getElementById('status').textContent = '⚠️ Sebagian data tersimpan di antrean (Menunggu sinyal stabil).';
+            document.getElementById('status').textContent = '⚠️ Tersimpan di antrean (Menunggu sinyal stabil).';
         }
     }
 
@@ -243,20 +246,20 @@
         document.getElementById('tglTransfer').value = today;
     }
 
-    // Auto sync kalau online kembali
     window.addEventListener('online', () => {
         prosesSyncBackground();
     });
 
-    // Render riwayat saat pertama kali buka
     window.addEventListener('DOMContentLoaded', () => {
         renderRiwayat();
+        if (navigator.onLine) {
+            prosesSyncBackground();
+        }
     });
 
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js');
     }
 </script>
-
 </body>
 </html>
