@@ -4,26 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SRF Nota - Pilih Toko</title>
-    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-main: #0B0F19;
             --bg-card: #1E293B;
+            --bg-input: #0F172A;
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
             --border: #334155;
-            --accent-unyil: #3B82F6;
-            --accent-aldi: #10B981;
-            --accent-leora: #8B5CF6;
+            --accent: #3B82F6;
+            --success: #10B981;
+            --danger: #EF4444;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
         body {
             background-color: var(--bg-main);
@@ -37,47 +32,48 @@
 
         .container {
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             background: var(--bg-card);
             padding: 28px 24px;
             border-radius: 20px;
             border: 1px solid var(--border);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
             text-align: center;
         }
 
-        .logo-badge {
-            width: 54px;
-            height: 54px;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px auto;
-            font-size: 1.5rem;
-        }
+        h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+        p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
 
-        h2 {
+        /* Area Login Kunci */
+        #authSection { margin-bottom: 20px; }
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             color: var(--text-main);
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 6px;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            margin-bottom: 12px;
+        }
+        input[type="password"]:focus { border-color: var(--accent); }
+
+        .btn-auth {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
         }
 
-        p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 24px;
-        }
-
-        .menu-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        /* Menu Toko (Hidden by default sampai kunci benar) */
+        #menuSection { display: none; }
+        .menu-list { display: flex; flex-direction: column; gap: 12px; }
 
         .btn-toko {
             display: flex;
@@ -85,89 +81,78 @@
             justify-content: space-between;
             width: 100%;
             padding: 16px 20px;
-            background: #0F172A;
+            background: var(--bg-input);
             color: var(--text-main);
             text-decoration: none;
             font-weight: 600;
             border-radius: 12px;
-            font-size: 0.95rem;
             border: 1px solid var(--border);
-            transition: all 0.25s ease;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.2s ease;
         }
 
-        .btn-toko span {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .btn-toko:hover { border-color: var(--text-muted); background: #131c31; }
+        
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .btn-unyil .dot { background-color: #3B82F6; box-shadow: 0 0 8px #3B82F6; }
+        .btn-aldi .dot { background-color: #10B981; box-shadow: 0 0 8px #10B981; }
+        .btn-leora .dot { background-color: #8B5CF6; box-shadow: 0 0 8px #8B5CF6; }
 
-        .dot {
-            width: 10-px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .btn-unyil .dot { background-color: var(--accent-unyil); box-shadow: 0 0 10px var(--accent-unyil); }
-        .btn-aldi .dot { background-color: var(--accent-aldi); box-shadow: 0 0 10px var(--accent-aldi); }
-        .btn-leora .dot { background-color: var(--accent-leora); box-shadow: 0 0 10px var(--accent-leora); }
-
-        .btn-toko:hover {
-            transform: translateY(-2px);
-            border-color: var(--text-muted);
-            background: #131c31;
-        }
-
-        .arrow {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            transition: transform 0.2s;
-        }
-
-        .btn-toko:hover .arrow {
-            transform: translateX(4px);
-            color: var(--text-main);
-        }
-
-        .footer-note {
-            margin-top: 24px;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+        .error-msg { color: var(--danger); font-size: 0.8rem; margin-top: 8px; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="logo-badge">⚡</div>
     <h2>SRF Nota</h2>
-    <p>Pilih toko tujuan untuk mulai mencatat</p>
-    
-    <div class="menu-list">
-        <a href="unyil.html" class="btn-toko btn-unyil">
-            <span><i class="dot"></i> Nota Mang Unyil</span>
-            <span class="arrow">&rarr;</span>
-        </a>
-        <a href="aldi.html" class="btn-toko btn-aldi">
-            <span><i class="dot"></i> Nota Aldi</span>
-            <span class="arrow">&rarr;</span>
-        </a>
-        <a href="leora.html" class="btn-toko btn-leora">
-            <span><i class="dot"></i> Nota Leora</span>
-            <span class="arrow">&rarr;</span>
-        </a>
+    <p>Sistem Pencatatan Toko Terpadu</p>
+
+    <!-- KUNCI AKSES -->
+    <div id="authSection">
+        <input type="password" id="accessKey" placeholder="Masukkan Kunci Akses...">
+        <button class="btn-auth" onclick="cekKunci()">Masuk Aplikasi</button>
+        <div id="errorMsg" class="error-msg">Kunci akses salah!</div>
     </div>
 
-    <div class="footer-note">Secure PWA System</div>
+    <!-- PILIHAN TOKO -->
+    <div id="menuSection">
+        <p style="margin-bottom: 16px;">Silakan pilih toko tujuan:</p>
+        <div class="menu-list">
+            <a href="unyil.html" class="btn-toko btn-unyil">
+                <span style="display:flex; align-items:center; gap:10px;"><i class="dot"></i> Nota Mang Unyil</span>
+                <span>&rarr;</span>
+            </a>
+            <a href="aldi.html" class="btn-toko btn-aldi">
+                <span style="display:flex; align-items:center; gap:10px;"><i class="dot"></i> Nota Aldi</span>
+                <span>&rarr;</span>
+            </a>
+            <a href="leora.html" class="btn-toko btn-leora">
+                <span style="display:flex; align-items:center; gap:10px;"><i class="dot"></i> Nota Leora</span>
+                <span>&rarr;</span>
+            </a>
+        </div>
+    </div>
 </div>
 
 <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
+    const KUNCI_BENAR = "SRF";
+
+    function cekKunci() {
+        const val = document.getElementById('accessKey').value.trim();
+        if (val === KUNCI_BENAR) {
+            localStorage.setItem('srf_key', val);
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('menuSection').style.display = 'block';
+        } else {
+            document.getElementById('errorMsg').style.display = 'block';
+        }
+    }
+
+    // Auto-login jika sebelumnya sudah pernah buka & kunci tersimpan
+    window.onload = function() {
+        if (localStorage.getItem('srf_key') === KUNCI_BENAR) {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('menuSection').style.display = 'block';
+        }
     }
 </script>
 </body>
