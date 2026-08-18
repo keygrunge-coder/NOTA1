@@ -39,6 +39,7 @@
         .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
         .btn-primary { background-color: var(--accent); color: white; margin-top: 8px; }
+        .btn-primary:disabled { background-color: var(--border); color: var(--text-muted); cursor: not-allowed; }
 
         .btn-secondary { background-color: transparent; border: 1px dashed var(--accent); color: var(--accent); margin-top: 8px; }
 
@@ -71,11 +72,12 @@
             <div class="row-inputs">
                 <div class="form-group">
                     <label>Qty</label>
-                    <input type="number" id="qty" value="1" oninput="hitungSubtotal()">
+                    <input type="number" id="qty" value="1" min="1" oninput="hitungSubtotal()">
                 </div>
                 <div class="form-group">
                     <label>Harga Satuan</label>
-                    <input type="number" id="harga" placeholder="0" oninput="hitungSubtotal()">
+                    <input type="text" id="hargaInput" placeholder="0" oninput="formatInputHarga(this)">
+                    <input type="hidden" id="harga" value="0">
                 </div>
             </div>
             <div style="text-align: right; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">
@@ -90,7 +92,7 @@
                 <span>Total:</span>
                 <span id="grandTotal">Rp 0</span>
             </div>
-            <button class="btn btn-primary" onclick="kirimData()">Kirim ke Spreadsheet</button>
+            <button id="btnKirim" class="btn btn-primary" onclick="kirimData()">Kirim ke Spreadsheet</button>
         </div>
     </div>
 
@@ -99,7 +101,31 @@
         let cart = [];
         const WEB_URL = "https://script.google.com/macros/s/AKfycby90oba9XBjy32TXG1K9r-sTfAN-UJy5HwcyhzGBTsvYjS6VoMPKHkvbxKFJkIAs5Ri/exec";
 
-        function formatRupiah(n) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n); }
+        function formatRupiah(n) { 
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n); 
+        }
+
+        function formatInputHarga(el) {
+            let angkaBersih = el.value.replace(/[^,\d]/g, '').toString();
+            let split = angkaBersih.split(',');
+            let sisa = split[0].length % 3;
+            let rupiah = split[0].substr(0, sisa);
+            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+            
+            // Simpan nilai asli tanpa format di input hidden
+            document.getElementById('harga').value = angkaBersih.replace(/\./g, '');
+            
+            // Tampilkan format rupiah di input visual
+            el.value = rupiah ? 'Rp ' + rupiah : '';
+            hitungSubtotal();
+        }
 
         function hitungSubtotal() {
             let q = Number(document.getElementById('qty').value) || 0;
@@ -108,30 +134,65 @@
         }
 
         function tambahItem() {
-            let q = document.getElementById('qty').value;
+            let q = Number(document.getElementById('qty').value);
             let b = document.getElementById('barang').value.trim();
-            let h = document.getElementById('harga').value;
-            if(!b || !h) return alert("Isi nama dan harga!");
+            let h = Number(document.getElementById('harga').value);
+            
+            if(!b || h <= 0) return alert("Isi nama barang dan harga dengan benar!");
+            
             cart.push({ q, b, h });
             document.getElementById('barang').value = "";
-            document.getElementById('harga').value = "";
+            document.getElementById('hargaInput').value = "";
+            document.getElementById('harga').value = "0";
+            document.getElementById('qty').value = "1";
+            document.getElementById('previewSubtotal').innerText = "Rp 0";
             renderCart();
         }
 
         function renderCart() {
             let listEl = document.getElementById('cartList');
             let total = 0;
-            listEl.innerHTML = cart.map((item, i) => {
-                total += item.q * item.h;
-                return `<div class="cart-item"><span>${item.b} (${item.q}x)</span><span>${formatRupiah(item.q * item.h)}</span><button class="btn-delete" onclick="cart.splice(${i},1);renderCart()">&times;</button></div>`;
-            }).join('');
+            if(cart.length === 0) {
+                listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 10px;">Belum ada item ditambahkan.</div>`;
+            } else {
+                listEl.innerHTML = cart.map((item, i) => {
+                    total += item.q * item.h;
+                    return `<div class="cart-item"><span>${item.b} (${item.q}x)</span><span>${formatRupiah(item.q * item.h)}</span><button class="btn-delete" onclick="cart.splice(${i},1);renderCart()">&times;</button></div>`;
+                }).join('');
+            }
             document.getElementById('grandTotal').innerText = formatRupiah(total);
         }
 
+        // Render awal kosong
+        renderCart();
+
         function kirimData() {
-            if(cart.length === 0) return alert("Kosong!");
-            let params = new URLSearchParams({ key: "SRF", type: "belanja", tgl: document.getElementById('tgl').value, cartData: JSON.stringify(cart) });
-            fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params }).then(() => { alert("Terkirim!"); cart=[]; renderCart(); });
+            if(cart.length === 0) return alert("Keranjang masih kosong!");
+            
+            let btn = document.getElementById('btnKirim');
+            btn.disabled = true;
+            btn.innerText = "Mengirim...";
+
+            let params = new URLSearchParams({ 
+                key: "SRF", 
+                type: "belanja", 
+                tgl: document.getElementById('tgl').value, 
+                cartData: JSON.stringify(cart) 
+            });
+
+            fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params })
+            .then(() => { 
+                alert("Data berhasil terkirim!"); 
+                cart = []; 
+                renderCart(); 
+            })
+            .catch(() => {
+                alert("Gagal mengirim data. Coba lagi.");
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = "Kirim ke Spreadsheet";
+            });
         }
     </script>
 </body>
