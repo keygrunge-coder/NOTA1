@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Nota - ALDI</title>
+    <title>Nota - ALDI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,9 +13,9 @@
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
             --accent: #3B82F6;
-            --accent-hover: #2563EB;
             --danger: #EF4444;
             --success: #10B981;
+            --warning: #F59E0B;
             --border: #334155;
         }
 
@@ -41,37 +41,72 @@
             height: fit-content;
         }
 
-        h2 { text-align: center; color: var(--text-main); margin-bottom: 16px; font-size: 1.25rem; font-weight: 700; }
+        /* Tombol Sync Kecil di Kiri Atas */
+        .sync-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-input);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            font-size: 0.8rem;
+        }
+
+        .btn-sync {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: opacity 0.2s;
+        }
+        .btn-sync:hover { opacity: 0.9; }
+
+        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+        .back-link:hover { color: var(--text-main); }
+        h2 { color: var(--text-main); font-size: 1.15rem; font-weight: 700; }
 
         /* Navigasi Tab */
-        .tab { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .tab button { flex: 1; padding: 12px; cursor: pointer; border: none; background: transparent; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s; }
+        .tab { display: flex; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .tab button { flex: 1; padding: 10px; cursor: pointer; border: none; background: transparent; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
         .tab button.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
         .form-section { display: none; }
         .form-section.active { display: block; }
 
-        label { display: block; margin-top: 12px; font-weight: 500; font-size: 0.85rem; color: var(--text-muted); }
-        input { width: 100%; padding: 12px; margin-top: 6px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        label { display: block; margin-top: 10px; font-weight: 500; font-size: 0.8rem; color: var(--text-muted); }
+        input { width: 100%; padding: 10px; margin-top: 4px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
         input:focus { border-color: var(--accent); }
 
-        .nota-box { background: var(--bg-input); padding: 16px; border-radius: 12px; margin: 12px 0; border: 1px dashed var(--border); }
+        .nota-box { background: var(--bg-input); padding: 14px; border-radius: 10px; margin: 10px 0; border: 1px dashed var(--border); }
         
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: 600; }
         
-        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
-        
-        button.submit { width: 100%; background: var(--success); color: white; padding: 14px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 16px; transition: opacity 0.2s; }
-        button.submit:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0.7; }
-        
-        #status { margin-top: 15px; text-align: center; font-size: 0.85rem; font-weight: 500; }
+        button.action-btn { width: 100%; background: var(--accent); color: white; padding: 12px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 12px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Nota - ALDI</h2>
-    
+    <div class="header-top">
+        <a href="index.html" class="back-link">&larr; Menu</a>
+        <h2>Nota - ALDI</h2>
+        <div></div>
+    </div>
+
+    <!-- Status & Tombol Sync Kecil di Kiri -->
+    <div class="sync-bar">
+        <span id="syncStatusText" style="color: var(--warning);">⚠️ Belum dicadangkan</span>
+        <button class="btn-sync" onclick="prosesSync()">🔄 Sync Sekarang</button>
+    </div>
+
     <!-- Pilihan Tab -->
     <div class="tab">
         <button class="active" onclick="showForm('belanja', event)">Belanja</button>
@@ -79,13 +114,13 @@
     </div>
 
     <!-- FORM BELANJA -->
-    <form id="belanjaForm" class="form-section active">
+    <div id="belanjaForm" class="form-section active">
         <label>Tanggal:</label> 
-        <input type="date" id="tglBelanja" required>
+        <input type="date" id="tglBelanja">
         
         <div class="nota-box">
             <label>Nama Barang:</label> 
-            <input type="text" id="itemBarang" placeholder="Contoh: Rokok / Kopi...">
+            <input type="text" id="itemBarang" placeholder="Contoh: Kopi...">
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <div>
@@ -98,34 +133,32 @@
                 </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">
-                <span>Subtotal Item:</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
+                <span>Subtotal:</span>
                 <span id="previewSubtotal" style="color: var(--text-main); font-weight: 600;">Rp 0</span>
             </div>
 
-            <button type="button" onclick="addToCart()" style="width:100%; margin-top:12px; padding:12px; background:transparent; border: 1px dashed var(--accent); color: var(--accent); border-radius:8px; font-weight:600; cursor:pointer;">+ Tambah ke Daftar</button>
+            <button type="button" onclick="addToCart()" style="width:100%; margin-top:10px; padding:10px; background:transparent; border: 1px dashed var(--accent); color: var(--accent); border-radius:8px; font-weight:600; cursor:pointer;">+ Masukkan ke Draf Antrean</button>
             
-            <div id="cartList" style="margin-top:15px; max-height: 180px; overflow-y: auto;"></div>
+            <div id="cartList" style="margin-top:12px; max-height: 150px; overflow-y: auto;"></div>
         </div>
         
-        <button type="submit" id="btnKirimBelanja" class="submit">Kirim Belanja ke Sheet</button>
-    </form>
+        <button type="button" onclick="simpanAntreanBelanja()" class="action-btn">Simpan ke Daftar Antrean</button>
+    </div>
 
     <!-- FORM TRANSFER -->
-    <form id="transferForm" class="form-section">
+    <div id="transferForm" class="form-section">
         <label>Tanggal:</label> 
-        <input type="date" id="tglTransfer" required>
+        <input type="date" id="tglTransfer">
         
         <label>Nominal Transfer:</label> 
-        <input type="number" id="nominalTransfer" placeholder="0" required>
+        <input type="number" id="nominalTransfer" placeholder="0">
         
         <label>Rincian / Catatan:</label> 
-        <input type="text" id="rincianTransfer" placeholder="Misal: BCA / Transfer ke Rek..." required>
+        <input type="text" id="rincianTransfer" placeholder="Misal: BCA...">
         
-        <button type="submit" id="btnKirimTransfer" class="submit">Kirim Transfer ke Sheet</button>
-    </form>
-
-    <div id="status"></div>
+        <button type="button" onclick="simpanAntreanTransfer()" class="action-btn">Simpan Transfer ke Antrean</button>
+    </div>
 </div>
 
 <script>
@@ -169,7 +202,7 @@
     function renderCart() {
         const list = document.getElementById('cartList');
         if (cart.length === 0) {
-            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px 0;">Daftar belanja masih kosong</div>`;
+            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 6px 0;">Belum ada item draf</div>`;
             return;
         }
         let html = '';
@@ -177,82 +210,107 @@
             let subtotal = Number(item.q) * Number(item.h);
             html += `
                 <div class="cart-item">
-                    <span><b>${item.b}</b> (${item.q}x @ ${formatRupiah(item.h)})<br><span style="color:var(--accent); font-size:0.8rem;">Subtotal: ${formatRupiah(subtotal)}</span></span> 
+                    <span><b>${item.b}</b> (${item.q}x @ ${formatRupiah(item.h)})</span> 
                     <button type="button" class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>
                 </div>`;
         });
         list.innerHTML = html;
     }
 
-    // --- SUBMIT BELANJA ---
-    document.getElementById('belanjaForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        if (cart.length === 0) { alert('Daftar belanja masih kosong!'); return; }
-
-        const btn = document.getElementById('btnKirimBelanja');
-        const statusEl = document.getElementById('status');
-        btn.disabled = true;
-        btn.textContent = 'Mengirim...';
-
-        let params = new URLSearchParams();
-        params.append("key", "SRF");
-        params.append("type", "belanja");
-        params.append("tgl", document.getElementById('tglBelanja').value);
-        params.append("cartData", JSON.stringify(cart));
-
-        try {
-            await fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params });
-            statusEl.style.color = 'var(--success)';
-            statusEl.textContent = '✅ Belanja berhasil dikirim ke Sheet ALDI!';
-            cart = [];
-            renderCart();
-            document.getElementById('belanjaForm').reset();
-            setTanggal();
-        } catch(err) {
-            statusEl.style.color = 'var(--danger)';
-            statusEl.textContent = '❌ Gagal mengirim data!';
+    // Cek Status Antrean Lokal
+    function updateStatusUI() {
+        let queue = JSON.parse(localStorage.getItem('aldi_queue') || '[]');
+        let statusText = document.getElementById('syncStatusText');
+        if (queue.length > 0) {
+            statusText.style.color = 'var(--warning)';
+            statusText.textContent = `⚠️ Ada ${queue.length} antrean belum sync`;
+        } else {
+            statusText.style.color = 'var(--success)';
+            statusText.textContent = `✅ Semua sukses tersync`;
         }
-        btn.disabled = false;
-        btn.textContent = 'Kirim Belanja ke Sheet';
-    });
-
-    // --- SUBMIT TRANSFER ---
-    document.getElementById('transferForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        const btn = document.getElementById('btnKirimTransfer');
-        const statusEl = document.getElementById('status');
-        btn.disabled = true;
-        btn.textContent = 'Mengirim...';
-
-        let params = new URLSearchParams();
-        params.append("key", "SRF");
-        params.append("type", "transfer");
-        params.append("tgl", document.getElementById('tglTransfer').value);
-        params.append("nominal", document.getElementById('nominalTransfer').value);
-        params.append("rincian", document.getElementById('rincianTransfer').value);
-
-        try {
-            await fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params });
-            statusEl.style.color = 'var(--success)';
-            statusEl.textContent = '✅ Transfer berhasil dikirim ke Sheet TRANSFER!';
-            document.getElementById('transferForm').reset();
-            setTanggal();
-        } catch(err) {
-            statusEl.style.color = 'var(--danger)';
-            statusEl.textContent = '❌ Gagal mengirim data!';
-        }
-        btn.disabled = false;
-        btn.textContent = 'Kirim Transfer ke Sheet';
-    });
-
-    function setTanggal() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('tglBelanja').value = today;
-        document.getElementById('tglTransfer').value = today;
     }
 
-    setTanggal();
+    function simpanAntreanBelanja() {
+        if (cart.length === 0) { alert('Draf belanja masih kosong!'); return; }
+        let queue = JSON.parse(localStorage.getItem('aldi_queue') || '[]');
+        
+        queue.push({
+            type: 'belanja',
+            tgl: document.getElementById('tglBelanja').value,
+            cartData: JSON.stringify(cart)
+        });
+
+        localStorage.setItem('aldi_queue', JSON.stringify(queue));
+        cart = [];
+        renderCart();
+        updateStatusUI();
+        alert('Berhasil disimpan ke antrean lokal! Klik "Sync Sekarang" jika ingin kirim ke Sheet.');
+    }
+
+    function simpanAntreanTransfer() {
+        let nominal = document.getElementById('nominalTransfer').value;
+        let rincian = document.getElementById('rincianTransfer').value;
+        if (!nominal || !rincian) { alert('Lengkapi data transfer!'); return; }
+
+        let queue = JSON.parse(localStorage.getItem('aldi_queue') || '[]');
+        
+        queue.push({
+            type: 'transfer',
+            tgl: document.getElementById('tglTransfer').value,
+            nominal: nominal,
+            rincian: rincian
+        });
+
+        localStorage.setItem('aldi_queue', JSON.stringify(queue));
+        document.getElementById('nominalTransfer').value = '';
+        document.getElementById('rincianTransfer').value = '';
+        updateStatusUI();
+        alert('Transfer disimpan ke antrean lokal!');
+    }
+
+    async function prosesSync() {
+        let queue = JSON.parse(localStorage.getItem('aldi_queue') || '[]');
+        if (queue.length === 0) { alert('Tidak ada antrean yang perlu disync.'); return; }
+
+        let key = localStorage.getItem('srf_key') || 'SRF';
+        let statusText = document.getElementById('syncStatusText');
+        statusText.style.color = 'var(--warning)';
+        statusText.textContent = '🔄 Sedang mengirim...';
+
+        let sisa = [];
+        for (let item of queue) {
+            let params = new URLSearchParams();
+            params.append("key", key);
+            params.append("type", item.type);
+            params.append("tgl", item.tgl);
+            if(item.type === 'belanja') {
+                params.append("cartData", item.cartData);
+            } else {
+                params.append("nominal", item.nominal);
+                params.append("rincian", item.rincian);
+            }
+
+            try {
+                await fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params });
+            } catch(e) {
+                sisa.push(item);
+            }
+        }
+
+        localStorage.setItem('aldi_queue', JSON.stringify(sisa));
+        updateStatusUI();
+        if(sisa.length === 0) {
+            alert('✅ Sinkronisasi sukses! Data sudah masuk Google Sheet.');
+        } else {
+            alert('⚠️ Sebagian antrean gagal terkirim, periksa koneksi.');
+        }
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('tglBelanja').value = today;
+    document.getElementById('tglTransfer').value = today;
     renderCart();
+    updateStatusUI();
 </script>
 </body>
 </html>
