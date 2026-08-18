@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Belanja - ALDI</title>
-    <!-- Google Fonts Inter -->
+    <title>Input Nota - ALDI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,348 +15,244 @@
             --accent: #3B82F6;
             --accent-hover: #2563EB;
             --danger: #EF4444;
+            --success: #10B981;
             --border: #334155;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+        body { 
+            background-color: var(--bg-main); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            padding: 16px; 
+            display: flex; 
+            justify-content: center; 
         }
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            min-height: 100vh;
-            padding: 16px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        header {
-            text-align: center;
-            padding: 12px 0;
-        }
-
-        header h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: 0.5px;
-        }
-
-        header p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .card {
-            background-color: var(--bg-card);
+        .container { 
+            width: 100%; 
+            max-width: 480px; 
+            background: var(--bg-card); 
+            padding: 20px; 
+            border-radius: 16px; 
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); 
+            height: fit-content;
         }
 
-        .form-group {
-            margin-bottom: 12px;
-        }
+        h2 { text-align: center; color: var(--text-main); margin-bottom: 16px; font-size: 1.25rem; font-weight: 700; }
 
-        label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
+        /* Navigasi Tab */
+        .tab { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .tab button { flex: 1; padding: 12px; cursor: pointer; border: none; background: transparent; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s; }
+        .tab button.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
-        input {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
 
-        input:focus {
-            border-color: var(--accent);
-        }
+        label { display: block; margin-top: 12px; font-weight: 500; font-size: 0.85rem; color: var(--text-muted); }
+        input { width: 100%; padding: 12px; margin-top: 6px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        input:focus { border-color: var(--accent); }
 
-        .row-inputs {
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 8px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn-primary {
-            background-color: var(--accent);
-            color: white;
-            margin-top: 8px;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px dashed var(--accent);
-            color: var(--accent);
-            margin-top: 8px;
-        }
-
-        .btn-secondary:hover {
-            background-color: rgba(59, 130, 246, 0.1);
-        }
-
-        /* Daftar Item di Keranjang */
-        .cart-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 220px;
-            overflow-y: auto;
-            margin-top: 8px;
-        }
-
-        .cart-item {
-            background-color: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .item-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .item-name {
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .item-detail {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .btn-delete {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 4px 8px;
-        }
-
-        .total-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 12px;
-            border-top: 1px solid var(--border);
-            margin-top: 12px;
-            font-weight: 700;
-        }
-
-        .total-amount {
-            color: var(--accent);
-            font-size: 1.1rem;
-        }
-
-        /* Loading overlay sederhana */
-        #loading {
-            display: none;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
+        .nota-box { background: var(--bg-input); padding: 16px; border-radius: 12px; margin: 12px 0; border: 1px dashed var(--border); }
+        
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        
+        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
+        
+        button.submit { width: 100%; background: var(--success); color: white; padding: 14px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 16px; transition: opacity 0.2s; }
+        button.submit:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0.7; }
+        
+        #status { margin-top: 15px; text-align: center; font-size: 0.85rem; font-weight: 500; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>INPUT BELANJA ALDI</h1>
-            <p>Catat belanjaan dengan cepat & rapi</p>
-        </header>
-
-        <!-- Form Input Header -->
-        <div class="card">
-            <div class="form-group">
-                <label>Tanggal Belanja</label>
-                <input type="date" id="tgl">
-            </div>
-        </div>
-
-        <!-- Form Tambah Barang -->
-        <div class="card">
-            <div class="row-inputs">
-                <div class="form-group">
-                    <label>Qty</label>
-                    <input type="number" id="qty" placeholder="1" value="1">
-                </div>
-                <div class="form-group">
-                    <label>Nama Barang</label>
-                    <input type="text" id="barang" placeholder="Nama barang...">
-                </div>
-                <div class="form-group">
-                    <label>Harga</label>
-                    <input type="number" id="harga" placeholder="0">
-                </div>
-            </div>
-            <button type="button" class="btn btn-secondary" onclick="tambahItem()">+ Tambah ke Daftar</button>
-        </div>
-
-        <!-- Daftar Keranjang Belanja -->
-        <div class="card">
-            <label style="margin-bottom: 8px;">Daftar Item Belanja</label>
-            <div id="cartList" class="cart-list">
-                <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px 0;">Belum ada item ditambahkan</div>
-            </div>
-
-            <div class="total-section">
-                <span>Total Keseluruhan:</span>
-                <span id="grandTotal" class="total-amount">Rp 0</span>
-            </div>
-
-            <button type="button" class="btn btn-primary" onclick="kirimData()" style="margin-top: 16px;">Kirim ke Spreadsheet</button>
-            <div id="loading">Sedang mengirim data...</div>
-        </div>
+<div class="container">
+    <h2>Nota - ALDI</h2>
+    
+    <!-- Pilihan Tab -->
+    <div class="tab">
+        <button class="active" onclick="showForm('belanja', event)">Belanja</button>
+        <button onclick="showForm('transfer', event)">Transfer</button>
     </div>
 
-    <script>
-        // Set tanggal otomatis ke hari ini
-        document.getElementById('tgl').valueAsDate = new Date();
+    <!-- FORM BELANJA -->
+    <form id="belanjaForm" class="form-section active">
+        <label>Tanggal:</label> 
+        <input type="date" id="tglBelanja" required>
+        
+        <div class="nota-box">
+            <label>Nama Barang:</label> 
+            <input type="text" id="itemBarang" placeholder="Contoh: Rokok / Kopi...">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div>
+                    <label>Qty:</label> 
+                    <input type="number" id="itemQty" value="1" oninput="hitungPreview()">
+                </div>
+                <div>
+                    <label>Harga Satuan:</label> 
+                    <input type="number" id="itemHarga" placeholder="0" oninput="hitungPreview()">
+                </div>
+            </div>
 
-        let cart = [];
-        const WEB_URL = "https://script.google.com/macros/s/AKfycbwLxiI9_vhSdKm6VJ7YwTo7Ee0miD5W6oGxX3hMOJa8xJegWxufwbFwVyYFrC7dy5DIlg/exec";
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">
+                <span>Subtotal Item:</span>
+                <span id="previewSubtotal" style="color: var(--text-main); font-weight: 600;">Rp 0</span>
+            </div>
 
-        function formatRupiah(angka) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
-        }
+            <button type="button" onclick="addToCart()" style="width:100%; margin-top:12px; padding:12px; background:transparent; border: 1px dashed var(--accent); color: var(--accent); border-radius:8px; font-weight:600; cursor:pointer;">+ Tambah ke Daftar</button>
+            
+            <div id="cartList" style="margin-top:15px; max-height: 180px; overflow-y: auto;"></div>
+        </div>
+        
+        <button type="submit" id="btnKirimBelanja" class="submit">Kirim Belanja ke Sheet</button>
+    </form>
 
-        function tambahItem() {
-            let q = document.getElementById('qty').value;
-            let b = document.getElementById('barang').value.trim();
-            let h = document.getElementById('harga').value;
+    <!-- FORM TRANSFER -->
+    <form id="transferForm" class="form-section">
+        <label>Tanggal:</label> 
+        <input type="date" id="tglTransfer" required>
+        
+        <label>Nominal Transfer:</label> 
+        <input type="number" id="nominalTransfer" placeholder="0" required>
+        
+        <label>Rincian / Catatan:</label> 
+        <input type="text" id="rincianTransfer" placeholder="Misal: BCA / Transfer ke Rek..." required>
+        
+        <button type="submit" id="btnKirimTransfer" class="submit">Kirim Transfer ke Sheet</button>
+    </form>
 
-            if (!b || !h || q <= 0) {
-                alert("Mohon isi Qty, Nama Barang, dan Harga dengan benar!");
-                return;
-            }
+    <div id="status"></div>
+</div>
 
-            cart.push({ q: Number(q), b: b, h: Number(h) });
+<script>
+    const WEB_URL = "https://script.google.com/macros/s/AKfycbwLxiI9_vhSdKm6VJ7YwTo7Ee0miD5W6oGxX3hMOJa8xJegWxufwbFwVyYFrC7dy5DIlg/exec";
+    let cart = [];
 
-            // Reset input barang & harga (biar cepat input berikutnya)
-            document.getElementById('qty').value = "1";
-            document.getElementById('barang').value = "";
-            document.getElementById('harga').value = "";
-            document.getElementById('barang').focus();
+    function formatRupiah(angka) {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
+    }
 
+    function hitungPreview() {
+        let q = Number(document.getElementById('itemQty').value) || 0;
+        let h = Number(document.getElementById('itemHarga').value) || 0;
+        document.getElementById('previewSubtotal').innerText = formatRupiah(q * h);
+    }
+
+    function showForm(type, evt) {
+        document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
+        document.querySelectorAll('.tab button').forEach(b => b.classList.remove('active'));
+        document.getElementById(type + 'Form').classList.add('active');
+        evt.currentTarget.classList.add('active');
+    }
+
+    function addToCart() {
+        const b = document.getElementById('itemBarang').value.trim();
+        const q = document.getElementById('itemQty').value;
+        const h = document.getElementById('itemHarga').value;
+        if(b && q && h) {
+            cart.push({b, q, h});
             renderCart();
+            document.getElementById('itemBarang').value = '';
+            document.getElementById('itemQty').value = '1';
+            document.getElementById('itemHarga').value = '';
+            document.getElementById('previewSubtotal').innerText = 'Rp 0';
+            document.getElementById('itemBarang').focus();
+        } else {
+            alert('Lengkapi nama barang, qty, dan harga!');
         }
+    }
 
-        function hapusItem(index) {
-            cart.splice(index, 1);
+    function renderCart() {
+        const list = document.getElementById('cartList');
+        if (cart.length === 0) {
+            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px 0;">Daftar belanja masih kosong</div>`;
+            return;
+        }
+        let html = '';
+        cart.forEach((item, index) => {
+            let subtotal = Number(item.q) * Number(item.h);
+            html += `
+                <div class="cart-item">
+                    <span><b>${item.b}</b> (${item.q}x @ ${formatRupiah(item.h)})<br><span style="color:var(--accent); font-size:0.8rem;">Subtotal: ${formatRupiah(subtotal)}</span></span> 
+                    <button type="button" class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>
+                </div>`;
+        });
+        list.innerHTML = html;
+    }
+
+    // --- SUBMIT BELANJA ---
+    document.getElementById('belanjaForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        if (cart.length === 0) { alert('Daftar belanja masih kosong!'); return; }
+
+        const btn = document.getElementById('btnKirimBelanja');
+        const statusEl = document.getElementById('status');
+        btn.disabled = true;
+        btn.textContent = 'Mengirim...';
+
+        let params = new URLSearchParams();
+        params.append("key", "SRF");
+        params.append("type", "belanja");
+        params.append("tgl", document.getElementById('tglBelanja').value);
+        params.append("cartData", JSON.stringify(cart));
+
+        try {
+            await fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params });
+            statusEl.style.color = 'var(--success)';
+            statusEl.textContent = '✅ Belanja berhasil dikirim ke Sheet ALDI!';
+            cart = [];
             renderCart();
+            document.getElementById('belanjaForm').reset();
+            setTanggal();
+        } catch(err) {
+            statusEl.style.color = 'var(--danger)';
+            statusEl.textContent = '❌ Gagal mengirim data!';
         }
+        btn.disabled = false;
+        btn.textContent = 'Kirim Belanja ke Sheet';
+    });
 
-        function renderCart() {
-            let listEl = document.getElementById('cartList');
-            let grandTotalEl = document.getElementById('grandTotal');
+    // --- SUBMIT TRANSFER ---
+    document.getElementById('transferForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn = document.getElementById('btnKirimTransfer');
+        const statusEl = document.getElementById('status');
+        btn.disabled = true;
+        btn.textContent = 'Mengirim...';
 
-            if (cart.length === 0) {
-                listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px 0;">Belum ada item ditambahkan</div>`;
-                grandTotalEl.innerText = formatRupiah(0);
-                return;
-            }
+        let params = new URLSearchParams();
+        params.append("key", "SRF");
+        params.append("type", "transfer");
+        params.append("tgl", document.getElementById('tglTransfer').value);
+        params.append("nominal", document.getElementById('nominalTransfer').value);
+        params.append("rincian", document.getElementById('rincianTransfer').value);
 
-            let html = "";
-            let totalSemua = 0;
-
-            cart.forEach((item, index) => {
-                let subtotal = item.q * item.h;
-                totalSemua += subtotal;
-                html += `
-                    <div class="cart-item">
-                        <div class="item-info">
-                            <span class="item-name">${item.b}</span>
-                            <span class="item-detail">${item.q}x @ ${formatRupiah(item.h)} = <b>${formatRupiah(subtotal)}</b></span>
-                        </div>
-                        <button class="btn-delete" onclick="hapusItem(${index})">&times;</button>
-                    </div>
-                `;
-            });
-
-            listEl.innerHTML = html;
-            grandTotalEl.innerText = formatRupiah(totalSemua);
+        try {
+            await fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params });
+            statusEl.style.color = 'var(--success)';
+            statusEl.textContent = '✅ Transfer berhasil dikirim ke Sheet TRANSFER!';
+            document.getElementById('transferForm').reset();
+            setTanggal();
+        } catch(err) {
+            statusEl.style.color = 'var(--danger)';
+            statusEl.textContent = '❌ Gagal mengirim data!';
         }
+        btn.disabled = false;
+        btn.textContent = 'Kirim Transfer ke Sheet';
+    });
 
-        function kirimData() {
-            if (cart.length === 0) {
-                alert("Keranjang masih kosong, bro!");
-                return;
-            }
+    function setTanggal() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('tglBelanja').value = today;
+        document.getElementById('tglTransfer').value = today;
+    }
 
-            let tgl = document.getElementById('tgl').value;
-            let loadingEl = document.getElementById('loading');
-
-            loadingEl.style.display = "block";
-
-            let params = new URLSearchParams();
-            params.append("key", "SRF");
-            params.append("type", "belanja");
-            params.append("tgl", tgl);
-            params.append("cartData", JSON.stringify(cart));
-
-            fetch(WEB_URL, {
-                method: "POST",
-                mode: "no-cors", // Menghindari CORS error dari Apps Script
-                body: params
-            })
-            .then(() => {
-                loadingEl.style.display = "none";
-                alert("Berhasil dikirim ke Spreadsheet, bro!");
-                cart = []; // Kosongkan keranjang
-                renderCart();
-            })
-            .catch(error => {
-                loadingEl.style.display = "none";
-                alert("Gagal mengirim data: " + error);
-            });
-        }
-    </script>
+    setTanggal();
+    renderCart();
+</script>
 </body>
 </html>
