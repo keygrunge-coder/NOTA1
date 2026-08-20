@@ -3,336 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nota - UNYIL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Sistem UNYIL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-main: #0B0F19;
-            --bg-card: #1E293B;
-            --bg-input: #0F172A;
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            --accent: #3B82F6;
-            --danger: #EF4444;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --border: #334155;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-
-        body { 
-            background-color: var(--bg-main); 
-            color: var(--text-main); 
-            min-height: 100vh; 
-            padding: 16px; 
-            display: flex; 
-            justify-content: center; 
-        }
-
-        .container { 
-            width: 100%; 
-            max-width: 480px; 
-            background: var(--bg-card); 
-            padding: 20px; 
-            border-radius: 16px; 
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); 
-            height: fit-content;
-        }
-
-        /* Tombol Sync Kecil di Kiri Atas */
-        .sync-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg-input);
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            margin-bottom: 16px;
-            font-size: 0.8rem;
-        }
-
-        .btn-sync {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.75rem;
-            transition: opacity 0.2s;
-        }
-        .btn-sync:hover { opacity: 0.9; }
-
-        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
-        .back-link:hover { color: var(--text-main); }
-        h2 { color: var(--text-main); font-size: 1.15rem; font-weight: 700; }
-
-        /* Navigasi Tab */
-        .tab { display: flex; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
-        .tab button { flex: 1; padding: 10px; cursor: pointer; border: none; background: transparent; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
-        .tab button.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
-
-        .form-section { display: none; }
-        .form-section.active { display: block; }
-
-        label { display: block; margin-top: 10px; font-weight: 500; font-size: 0.8rem; color: var(--text-muted); }
-        input { width: 100%; padding: 10px; margin-top: 4px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
-        input:focus { border-color: var(--accent); }
-
-        .nota-box { background: var(--bg-input); padding: 14px; border-radius: 10px; margin: 10px 0; border: 1px dashed var(--border); }
-        
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
-        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: 600; }
-        
-        button.action-btn { width: 100%; background: var(--accent); color: white; padding: 12px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 12px; }
+        :root { --bg-main: #0B0F19; --bg-card: #1E293B; --accent: #10B981; --text-main: #F8FAFC; }
+        body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Inter', sans-serif; padding: 20px; }
+        .container { max-width: 450px; margin: auto; background: var(--bg-card); padding: 20px; border-radius: 12px; }
+        input { width: 100%; padding: 10px; margin: 8px 0; background: #0F172A; border: 1px solid #334155; border-radius: 6px; color: white; }
+        button { width: 100%; background: var(--accent); color: white; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header-top">
-        <a href="index.html" class="back-link">&larr; Menu</a>
-        <h2>Nota - UNYIL</h2>
-        <div></div>
-    </div>
+    <h2>Data Operasional UNYIL</h2>
+    
+    <label>Tanggal:</label>
+    <input type="date" id="tglUnyil">
+    
+    <label>Nama Item / Produk:</label>
+    <input type="text" id="itemUnyil" placeholder="Masukkan nama item...">
+    
+    <label>Status / Catatan:</label>
+    <input type="text" id="catatanUnyil" placeholder="Keterangan tambahan...">
 
-    <!-- Status & Tombol Sync Kecil -->
-    <div class="sync-bar">
-        <span id="syncStatusText" style="color: var(--warning);">⚠️ Belum dicadangkan</span>
-        <button class="btn-sync" onclick="prosesSync()">🔄 Sync Sekarang</button>
-    </div>
-
-    <!-- Pilihan Tab -->
-    <div class="tab">
-        <button class="active" onclick="showForm('belanja', event)">Belanja</button>
-        <button onclick="showForm('transfer', event)">Transfer</button>
-    </div>
-
-    <!-- FORM BELANJA -->
-    <div id="belanjaForm" class="form-section active">
-        <label>Tanggal:</label> 
-        <input type="date" id="tglBelanja">
-        
-        <div class="nota-box">
-            <label>Nama Barang:</label> 
-            <input type="text" id="itemBarang" placeholder="Contoh: Barang...">
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div>
-                    <label>Qty:</label> 
-                    <input type="number" id="itemQty" value="1" min="1" oninput="hitungPreview()">
-                </div>
-                <div>
-                    <label>Harga Satuan:</label> 
-                    <input type="text" id="hargaInput" placeholder="0" oninput="formatInputHarga(this)">
-                    <input type="hidden" id="itemHarga" value="0">
-                </div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
-                <span>Subtotal:</span>
-                <span id="previewSubtotal" style="color: var(--text-main); font-weight: 600;">Rp 0</span>
-            </div>
-
-            <button type="button" onclick="addToCart()" style="width:100%; margin-top:10px; padding:10px; background:transparent; border: 1px dashed var(--accent); color: var(--accent); border-radius:8px; font-weight:600; cursor:pointer;">+ Masukkan ke Draf Antrean</button>
-            
-            <div id="cartList" style="margin-top:12px; max-height: 150px; overflow-y: auto;"></div>
-        </div>
-        
-        <button type="button" onclick="simpanAntreanBelanja()" class="action-btn">Simpan ke Daftar Antrean</button>
-    </div>
-
-    <!-- FORM TRANSFER -->
-    <div id="transferForm" class="form-section">
-        <label>Tanggal:</label> 
-        <input type="date" id="tglTransfer">
-        
-        <label>Nominal Transfer:</label> 
-        <input type="number" id="nominalTransfer" placeholder="0">
-        
-        <label>Rincian / Catatan:</label> 
-        <input type="text" id="rincianTransfer" placeholder="Misal: BCA...">
-        
-        <button type="button" onclick="simpanAntreanTransfer()" class="action-btn">Simpan Transfer ke Antrean</button>
-    </div>
+    <button onclick="simpanUnyil()">Simpan ke Data UNYIL</button>
 </div>
 
 <script>
     const WEB_URL = "https://script.google.com/macros/s/AKfycbyPwPC3Egm8ogzLIi_WrpTfFYo_OhhnrzR7dDo2HqzmNXmSu8wazOdSwelNH8_A2zQpjw/exec";
-    let cart = [];
 
-    function formatRupiah(angka) {
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
-    }
-
-    function formatInputHarga(el) {
-        let angkaBersih = el.value.replace(/[^,\d]/g, '').toString();
-        let split = angkaBersih.split(',');
-        let sisa = split[0].length % 3;
-        let rupiah = split[0].substr(0, sisa);
-        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-        if (ribuan) {
-            let separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+    function simpanUnyil() {
+        let data = {
+            key: 'UNYIL',
+            tgl: document.getElementById('tglUnyil').value,
+            item: document.getElementById('itemUnyil').value,
+            catatan: document.getElementById('catatanUnyil').value
+        };
         
-        document.getElementById('itemHarga').value = angkaBersih.replace(/\./g, '');
-        el.value = rupiah ? 'Rp ' + rupiah : '';
-        hitungPreview();
-    }
-
-    function hitungPreview() {
-        let q = Number(document.getElementById('itemQty').value) || 0;
-        let h = Number(document.getElementById('itemHarga').value) || 0;
-        document.getElementById('previewSubtotal').innerText = formatRupiah(q * h);
-    }
-
-    function showForm(type, evt) {
-        document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
-        document.querySelectorAll('.tab button').forEach(b => b.classList.remove('active'));
-        document.getElementById(type + 'Form').classList.add('active');
-        evt.currentTarget.classList.add('active');
-    }
-
-    function addToCart() {
-        const b = document.getElementById('itemBarang').value.trim();
-        const q = document.getElementById('itemQty').value;
-        const h = document.getElementById('itemHarga').value;
-        if(b && q && Number(h) > 0) {
-            cart.push({b, q, h});
-            renderCart();
-            document.getElementById('itemBarang').value = '';
-            document.getElementById('itemQty').value = '1';
-            document.getElementById('hargaInput').value = '';
-            document.getElementById('itemHarga').value = '0';
-            document.getElementById('previewSubtotal').innerText = 'Rp 0';
-            document.getElementById('itemBarang').focus();
-        } else {
-            alert('Lengkapi nama barang, qty, dan harga dengan benar!');
-        }
-    }
-
-    function renderCart() {
-        const list = document.getElementById('cartList');
-        if (cart.length === 0) {
-            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 6px 0;">Belum ada item draf</div>`;
-            return;
-        }
-        let html = '';
-        cart.forEach((item, index) => {
-            html += `
-                <div class="cart-item">
-                    <span><b>${item.b}</b> (${item.q}x @ ${formatRupiah(item.h)})</span> 
-                    <button type="button" class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>
-                </div>`;
-        });
-        list.innerHTML = html;
-    }
-
-    function updateStatusUI() {
-        let queue = JSON.parse(localStorage.getItem('unyil_queue') || '[]');
-        let statusText = document.getElementById('syncStatusText');
-        if (queue.length > 0) {
-            statusText.style.color = 'var(--warning)';
-            statusText.textContent = `⚠️ Ada ${queue.length} antrean belum sync`;
-        } else {
-            statusText.style.color = 'var(--success)';
-            statusText.textContent = `✅ Semua sukses tersync`;
-        }
-    }
-
-    function simpanAntreanBelanja() {
-        if (cart.length === 0) { alert('Draf belanja masih kosong!'); return; }
-        let queue = JSON.parse(localStorage.getItem('unyil_queue') || '[]');
+        let params = new URLSearchParams(data);
         
-        queue.push({
-            type: 'belanja',
-            tujuan: 'unyil', // Sesuaikan jika Apps Script-mu menggunakan parameter tujuan
-            tgl: document.getElementById('tglBelanja').value,
-            cartData: JSON.stringify(cart)
-        });
-
-        localStorage.setItem('unyil_queue', JSON.stringify(queue));
-        cart = [];
-        renderCart();
-        updateStatusUI();
-        alert('Berhasil disimpan ke antrean lokal! Klik "Sync Sekarang" untuk kirim.');
+        fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params })
+        .then(() => alert('Data UNYIL berhasil dikirim!'))
+        .catch(err => alert('Gagal: ' + err));
     }
-
-    function simpanAntreanTransfer() {
-        let nominal = document.getElementById('nominalTransfer').value;
-        let rincian = document.getElementById('rincianTransfer').value;
-        if (!nominal || !rincian) { alert('Lengkapi data transfer!'); return; }
-
-        let queue = JSON.parse(localStorage.getItem('unyil_queue') || '[]');
-        
-        queue.push({
-            type: 'transfer',
-            tgl: document.getElementById('tglTransfer').value,
-            nominal: nominal,
-            rincian: rincian
-        });
-
-        localStorage.setItem('unyil_queue', JSON.stringify(queue));
-        document.getElementById('nominalTransfer').value = '';
-        document.getElementById('rincianTransfer').value = '';
-        updateStatusUI();
-        alert('Transfer disimpan ke antrean lokal!');
-    }
-
-    async function prosesSync() {
-        let queue = JSON.parse(localStorage.getItem('unyil_queue') || '[]');
-        if (queue.length === 0) { alert('Tidak ada antrean yang perlu disync.'); return; }
-
-        let key = 'SRF';
-        let statusText = document.getElementById('syncStatusText');
-        statusText.style.color = 'var(--warning)';
-        statusText.textContent = '🔄 Sedang mengirim...';
-
-        let sisa = [];
-        for (let item of queue) {
-            let params = new URLSearchParams();
-            params.append("key", key);
-            params.append("type", item.type);
-            params.append("tgl", item.tgl);
-            
-            if(item.type === 'belanja') {
-                params.append("tujuan", item.tujuan || "unyil");
-                params.append("cartData", item.cartData);
-            } else {
-                params.append("nominal", item.nominal);
-                params.append("rincian", item.rincian);
-            }
-
-            try {
-                await fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params });
-            } catch(e) {
-                sisa.push(item);
-            }
-        }
-
-        localStorage.setItem('unyil_queue', JSON.stringify(sisa));
-        updateStatusUI();
-        if(sisa.length === 0) {
-            alert('✅ Sinkronisasi sukses! Data sudah masuk Google Sheet.');
-        } else {
-            alert('⚠️ Sebagian antrean gagal terkirim, periksa koneksi.');
-        }
-    }
-
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('tglBelanja').value = today;
-    document.getElementById('tglTransfer').value = today;
-    renderCart();
-    updateStatusUI();
+    
+    document.getElementById('tglUnyil').value = new Date().toISOString().split('T')[0];
 </script>
 </body>
 </html>
