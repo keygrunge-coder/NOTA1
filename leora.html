@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Belanja - LEORA</title>
+    <title>Nota - LEORA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,187 +13,326 @@
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
             --accent: #3B82F6;
-            --accent-hover: #2563EB;
             --danger: #EF4444;
+            --success: #10B981;
+            --warning: #F59E0B;
             --border: #334155;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
-        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 16px; display: flex; justify-content: center; }
+        body { 
+            background-color: var(--bg-main); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            padding: 16px; 
+            display: flex; 
+            justify-content: center; 
+        }
 
-        .container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 16px; }
+        .container { 
+            width: 100%; 
+            max-width: 480px; 
+            background: var(--bg-card); 
+            padding: 20px; 
+            border-radius: 16px; 
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); 
+            height: fit-content;
+        }
 
-        header { text-align: center; padding: 12px 0; }
+        /* Tombol Sync Kecil di Kiri Atas */
+        .sync-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-input);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            font-size: 0.8rem;
+        }
 
-        .card { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+        .btn-sync {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: opacity 0.2s;
+        }
+        .btn-sync:hover { opacity: 0.9; }
 
-        .form-group { margin-bottom: 12px; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+        .back-link:hover { color: var(--text-main); }
+        h2 { color: var(--text-main); font-size: 1.15rem; font-weight: 700; }
 
-        label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+        /* Navigasi Tab */
+        .tab { display: flex; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .tab button { flex: 1; padding: 10px; cursor: pointer; border: none; background: transparent; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+        .tab button.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
-        input { width: 100%; padding: 12px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); outline: none; }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
 
-        .row-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        label { display: block; margin-top: 10px; font-weight: 500; font-size: 0.8rem; color: var(--text-muted); }
+        input { width: 100%; padding: 10px; margin-top: 4px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
+        input:focus { border-color: var(--accent); }
 
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
-
-        .btn-primary { background-color: var(--accent); color: white; margin-top: 8px; }
-        .btn-primary:disabled { background-color: var(--border); color: var(--text-muted); cursor: not-allowed; }
-
-        .btn-secondary { background-color: transparent; border: 1px dashed var(--accent); color: var(--accent); margin-top: 8px; }
-
-        .cart-list { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; margin-top: 8px; }
-
-        .cart-item { background-color: var(--bg-input); padding: 10px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px; }
-
-        .btn-delete { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.2rem; }
-
-        .total-section { display: flex; justify-content: space-between; margin-top: 12px; font-weight: 700; color: var(--accent); }
+        .nota-box { background: var(--bg-input); padding: 14px; border-radius: 10px; margin: 10px 0; border: 1px dashed var(--border); }
+        
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: 600; }
+        
+        button.action-btn { width: 100%; background: var(--accent); color: white; padding: 12px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 12px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header><h1>LEORA</h1></header>
-
-        <div class="card">
-            <div class="form-group">
-                <label>Tanggal</label>
-                <input type="date" id="tgl">
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="form-group">
-                <label>Nama Barang</label>
-                <input type="text" id="barang" placeholder="Nama barang...">
-            </div>
-            <div class="row-inputs">
-                <div class="form-group">
-                    <label>Qty</label>
-                    <input type="number" id="qty" value="1" min="1" oninput="hitungSubtotal()">
-                </div>
-                <div class="form-group">
-                    <label>Harga Satuan</label>
-                    <input type="text" id="hargaInput" placeholder="0" oninput="formatInputHarga(this)">
-                    <input type="hidden" id="harga" value="0">
-                </div>
-            </div>
-            <div style="text-align: right; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">
-                Subtotal: <span id="previewSubtotal" style="color: white; font-weight: bold;">Rp 0</span>
-            </div>
-            <button class="btn btn-secondary" onclick="tambahItem()">+ Tambah ke Daftar</button>
-        </div>
-
-        <div class="card">
-            <div id="cartList" class="cart-list"></div>
-            <div class="total-section">
-                <span>Total:</span>
-                <span id="grandTotal">Rp 0</span>
-            </div>
-            <button id="btnKirim" class="btn btn-primary" onclick="kirimData()">Kirim ke Spreadsheet</button>
-        </div>
+<div class="container">
+    <div class="header-top">
+        <a href="index.html" class="back-link">&larr; Menu</a>
+        <h2>Nota - LEORA</h2>
+        <div></div>
     </div>
 
-    <script>
-        document.getElementById('tgl').valueAsDate = new Date();
-        let cart = [];
-        const WEB_URL = "https://script.google.com/macros/s/AKfycby90oba9XBjy32TXG1K9r-sTfAN-UJy5HwcyhzGBTsvYjS6VoMPKHkvbxKFJkIAs5Ri/exec";
+    <!-- Status & Tombol Sync Kecil -->
+    <div class="sync-bar">
+        <span id="syncStatusText" style="color: var(--warning);">⚠️ Belum dicadangkan</span>
+        <button class="btn-sync" onclick="prosesSync()">🔄 Sync Sekarang</button>
+    </div>
 
-        function formatRupiah(n) { 
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n); 
+    <!-- Pilihan Tab -->
+    <div class="tab">
+        <button class="active" onclick="showForm('belanja', event)">Belanja</button>
+        <button onclick="showForm('transfer', event)">Transfer</button>
+    </div>
+
+    <!-- FORM BELANJA -->
+    <div id="belanjaForm" class="form-section active">
+        <label>Tanggal:</label> 
+        <input type="date" id="tglBelanja">
+        
+        <div class="nota-box">
+            <label>Nama Barang:</label> 
+            <input type="text" id="itemBarang" placeholder="Contoh: Barang...">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div>
+                    <label>Qty:</label> 
+                    <input type="number" id="itemQty" value="1" min="1" oninput="hitungPreview()">
+                </div>
+                <div>
+                    <label>Harga Satuan:</label> 
+                    <input type="text" id="hargaInput" placeholder="0" oninput="formatInputHarga(this)">
+                    <input type="hidden" id="itemHarga" value="0">
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
+                <span>Subtotal:</span>
+                <span id="previewSubtotal" style="color: var(--text-main); font-weight: 600;">Rp 0</span>
+            </div>
+
+            <button type="button" onclick="addToCart()" style="width:100%; margin-top:10px; padding:10px; background:transparent; border: 1px dashed var(--accent); color: var(--accent); border-radius:8px; font-weight:600; cursor:pointer;">+ Masukkan ke Draf Antrean</button>
+            
+            <div id="cartList" style="margin-top:12px; max-height: 150px; overflow-y: auto;"></div>
+        </div>
+        
+        <button type="button" onclick="simpanAntreanBelanja()" class="action-btn">Simpan ke Daftar Antrean</button>
+    </div>
+
+    <!-- FORM TRANSFER -->
+    <div id="transferForm" class="form-section">
+        <label>Tanggal:</label> 
+        <input type="date" id="tglTransfer">
+        
+        <label>Nominal Transfer:</label> 
+        <input type="number" id="nominalTransfer" placeholder="0">
+        
+        <label>Rincian / Catatan:</label> 
+        <input type="text" id="rincianTransfer" placeholder="Misal: BCA...">
+        
+        <button type="button" onclick="simpanAntreanTransfer()" class="action-btn">Simpan Transfer ke Antrean</button>
+    </div>
+</div>
+
+<script>
+    const WEB_URL = "https://script.google.com/macros/s/AKfycby90oba9XBjy32TXG1K9r-sTfAN-UJy5HwcyhzGBTsvYjS6VoMPKHkvbxKFJkIAs5Ri/exec";
+    let cart = [];
+
+    function formatRupiah(angka) {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
+    }
+
+    function formatInputHarga(el) {
+        let angkaBersih = el.value.replace(/[^,\d]/g, '').toString();
+        let split = angkaBersih.split(',');
+        let sisa = split[0].length % 3;
+        let rupiah = split[0].substr(0, sisa);
+        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            let separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
         }
 
-        function formatInputHarga(el) {
-            let angkaBersih = el.value.replace(/[^,\d]/g, '').toString();
-            let split = angkaBersih.split(',');
-            let sisa = split[0].length % 3;
-            let rupiah = split[0].substr(0, sisa);
-            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+        
+        document.getElementById('itemHarga').value = angkaBersih.replace(/\./g, '');
+        el.value = rupiah ? 'Rp ' + rupiah : '';
+        hitungPreview();
+    }
 
-            if (ribuan) {
-                let separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
+    function hitungPreview() {
+        let q = Number(document.getElementById('itemQty').value) || 0;
+        let h = Number(document.getElementById('itemHarga').value) || 0;
+        document.getElementById('previewSubtotal').innerText = formatRupiah(q * h);
+    }
 
-            rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-            
-            // Simpan nilai asli tanpa format di input hidden
-            document.getElementById('harga').value = angkaBersih.replace(/\./g, '');
-            
-            // Tampilkan format rupiah di input visual
-            el.value = rupiah ? 'Rp ' + rupiah : '';
-            hitungSubtotal();
-        }
+    function showForm(type, evt) {
+        document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
+        document.querySelectorAll('.tab button').forEach(b => b.classList.remove('active'));
+        document.getElementById(type + 'Form').classList.add('active');
+        evt.currentTarget.classList.add('active');
+    }
 
-        function hitungSubtotal() {
-            let q = Number(document.getElementById('qty').value) || 0;
-            let h = Number(document.getElementById('harga').value) || 0;
-            document.getElementById('previewSubtotal').innerText = formatRupiah(q * h);
-        }
-
-        function tambahItem() {
-            let q = Number(document.getElementById('qty').value);
-            let b = document.getElementById('barang').value.trim();
-            let h = Number(document.getElementById('harga').value);
-            
-            if(!b || h <= 0) return alert("Isi nama barang dan harga dengan benar!");
-            
-            cart.push({ q, b, h });
-            document.getElementById('barang').value = "";
-            document.getElementById('hargaInput').value = "";
-            document.getElementById('harga').value = "0";
-            document.getElementById('qty').value = "1";
-            document.getElementById('previewSubtotal').innerText = "Rp 0";
+    function addToCart() {
+        const b = document.getElementById('itemBarang').value.trim();
+        const q = document.getElementById('itemQty').value;
+        const h = document.getElementById('itemHarga').value;
+        if(b && q && Number(h) > 0) {
+            cart.push({b, q, h});
             renderCart();
+            document.getElementById('itemBarang').value = '';
+            document.getElementById('itemQty').value = '1';
+            document.getElementById('hargaInput').value = '';
+            document.getElementById('itemHarga').value = '0';
+            document.getElementById('previewSubtotal').innerText = 'Rp 0';
+            document.getElementById('itemBarang').focus();
+        } else {
+            alert('Lengkapi nama barang, qty, dan harga dengan benar!');
         }
+    }
 
-        function renderCart() {
-            let listEl = document.getElementById('cartList');
-            let total = 0;
-            if(cart.length === 0) {
-                listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 10px;">Belum ada item ditambahkan.</div>`;
-            } else {
-                listEl.innerHTML = cart.map((item, i) => {
-                    total += item.q * item.h;
-                    return `<div class="cart-item"><span>${item.b} (${item.q}x)</span><span>${formatRupiah(item.q * item.h)}</span><button class="btn-delete" onclick="cart.splice(${i},1);renderCart()">&times;</button></div>`;
-                }).join('');
-            }
-            document.getElementById('grandTotal').innerText = formatRupiah(total);
+    function renderCart() {
+        const list = document.getElementById('cartList');
+        if (cart.length === 0) {
+            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 6px 0;">Belum ada item draf</div>`;
+            return;
         }
+        let html = '';
+        cart.forEach((item, index) => {
+            html += `
+                <div class="cart-item">
+                    <span><b>${item.b}</b> (${item.q}x @ ${formatRupiah(item.h)})</span> 
+                    <button type="button" class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>
+                </div>`;
+        });
+        list.innerHTML = html;
+    }
 
-        // Render awal kosong
+    function updateStatusUI() {
+        let queue = JSON.parse(localStorage.getItem('leora_queue') || '[]');
+        let statusText = document.getElementById('syncStatusText');
+        if (queue.length > 0) {
+            statusText.style.color = 'var(--warning)';
+            statusText.textContent = `⚠️ Ada ${queue.length} antrean belum sync`;
+        } else {
+            statusText.style.color = 'var(--success)';
+            statusText.textContent = `✅ Semua sukses tersync`;
+        }
+    }
+
+    function simpanAntreanBelanja() {
+        if (cart.length === 0) { alert('Draf belanja masih kosong!'); return; }
+        let queue = JSON.parse(localStorage.getItem('leora_queue') || '[]');
+        
+        queue.push({
+            type: 'belanja',
+            tujuan: 'leora', // Sesuaikan jika Apps Script-mu menggunakan parameter tujuan
+            tgl: document.getElementById('tglBelanja').value,
+            cartData: JSON.stringify(cart)
+        });
+
+        localStorage.setItem('leora_queue', JSON.stringify(queue));
+        cart = [];
         renderCart();
+        updateStatusUI();
+        alert('Berhasil disimpan ke antrean lokal! Klik "Sync Sekarang" untuk kirim.');
+    }
 
-        function kirimData() {
-            if(cart.length === 0) return alert("Keranjang masih kosong!");
+    function simpanAntreanTransfer() {
+        let nominal = document.getElementById('nominalTransfer').value;
+        let rincian = document.getElementById('rincianTransfer').value;
+        if (!nominal || !rincian) { alert('Lengkapi data transfer!'); return; }
+
+        let queue = JSON.parse(localStorage.getItem('leora_queue') || '[]');
+        
+        queue.push({
+            type: 'transfer',
+            tgl: document.getElementById('tglTransfer').value,
+            nominal: nominal,
+            rincian: rincian
+        });
+
+        localStorage.setItem('leora_queue', JSON.stringify(queue));
+        document.getElementById('nominalTransfer').value = '';
+        document.getElementById('rincianTransfer').value = '';
+        updateStatusUI();
+        alert('Transfer disimpan ke antrean lokal!');
+    }
+
+    async function prosesSync() {
+        let queue = JSON.parse(localStorage.getItem('leora_queue') || '[]');
+        if (queue.length === 0) { alert('Tidak ada antrean yang perlu disync.'); return; }
+
+        let key = 'SRF';
+        let statusText = document.getElementById('syncStatusText');
+        statusText.style.color = 'var(--warning)';
+        statusText.textContent = '🔄 Sedang mengirim...';
+
+        let sisa = [];
+        for (let item of queue) {
+            let params = new URLSearchParams();
+            params.append("key", key);
+            params.append("type", item.type);
+            params.append("tgl", item.tgl);
             
-            let btn = document.getElementById('btnKirim');
-            btn.disabled = true;
-            btn.innerText = "Mengirim...";
+            if(item.type === 'belanja') {
+                params.append("tujuan", item.tujuan || "leora");
+                params.append("cartData", item.cartData);
+            } else {
+                params.append("nominal", item.nominal);
+                params.append("rincian", item.rincian);
+            }
 
-            let params = new URLSearchParams({ 
-                key: "SRF", 
-                type: "belanja", 
-                tgl: document.getElementById('tgl').value, 
-                cartData: JSON.stringify(cart) 
-            });
-
-            fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params })
-            .then(() => { 
-                alert("Data berhasil terkirim!"); 
-                cart = []; 
-                renderCart(); 
-            })
-            .catch(() => {
-                alert("Gagal mengirim data. Coba lagi.");
-            })
-            .finally(() => {
-                btn.disabled = false;
-                btn.innerText = "Kirim ke Spreadsheet";
-            });
+            try {
+                await fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params });
+            } catch(e) {
+                sisa.push(item);
+            }
         }
-    </script>
+
+        localStorage.setItem('leora_queue', JSON.stringify(sisa));
+        updateStatusUI();
+        if(sisa.length === 0) {
+            alert('✅ Sinkronisasi sukses! Data sudah masuk Google Sheet.');
+        } else {
+            alert('⚠️ Sebagian antrean gagal terkirim, periksa koneksi.');
+        }
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('tglBelanja').value = today;
+    document.getElementById('tglTransfer').value = today;
+    renderCart();
+    updateStatusUI();
+</script>
 </body>
 </html>
