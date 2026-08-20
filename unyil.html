@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -21,27 +22,26 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
-        body { 
-            background-color: var(--bg-main); 
-            color: var(--text-main); 
-            min-height: 100vh; 
-            padding: 16px; 
-            display: flex; 
-            justify-content: center; 
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
         }
 
-        .container { 
-            width: 100%; 
-            max-width: 480px; 
-            background: var(--bg-card); 
-            padding: 20px; 
-            border-radius: 16px; 
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 16px;
             border: 1px solid var(--border);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
             height: fit-content;
         }
 
-        /* Tombol Sync Kecil di Kiri Atas */
         .sync-bar {
             display: flex;
             align-items: center;
@@ -65,252 +65,601 @@
             font-size: 0.75rem;
             transition: opacity 0.2s;
         }
+
         .btn-sync:hover { opacity: 0.9; }
 
-        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
-        .back-link:hover { color: var(--text-main); }
-        h2 { color: var(--text-main); font-size: 1.15rem; font-weight: 700; }
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
 
-        /* Navigasi Tab */
-        .tab { display: flex; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
-        .tab button { flex: 1; padding: 10px; cursor: pointer; border: none; background: transparent; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
-        .tab button.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .back-link:hover { color: var(--text-main); }
+
+        h2 {
+            color: var(--text-main);
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .tab {
+            display: flex;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab button {
+            flex: 1;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab button.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
 
         .form-section { display: none; }
         .form-section.active { display: block; }
 
-        label { display: block; margin-top: 10px; font-weight: 500; font-size: 0.8rem; color: var(--text-muted); }
-        input { width: 100%; padding: 10px; margin-top: 4px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; }
-        input:focus { border-color: var(--accent); }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
 
-        .nota-box { background: var(--bg-input); padding: 14px; border-radius: 10px; margin: 10px 0; border: 1px dashed var(--border); }
-        
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
-        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: 600; }
-        
-        button.action-btn { width: 100%; background: var(--accent); color: white; padding: 12px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 12px; }
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 4px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--accent);
+        }
+
+        .nota-box {
+            background: var(--bg-input);
+            padding: 14px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 1px dashed var(--border);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        button.action-btn {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+        }
     </style>
 </head>
+
 <body>
 
 <div class="container">
+
     <div class="header-top">
         <a href="index.html" class="back-link">&larr; Menu</a>
         <h2>Nota - UNYIL</h2>
         <div></div>
     </div>
 
-    <!-- Status & Tombol Sync Kecil di Kiri -->
     <div class="sync-bar">
-        <span id="syncStatusText" style="color: var(--warning);">⚠️ Belum dicadangkan</span>
-        <button class="btn-sync" onclick="prosesSync()">🔄 Sync Sekarang</button>
+        <span id="syncStatusText" style="color: var(--warning);">
+            ⚠️ Belum dicadangkan
+        </span>
+
+        <button class="btn-sync" onclick="prosesSync()">
+            🔄 Sync Sekarang
+        </button>
     </div>
 
-    <!-- Pilihan Tab -->
     <div class="tab">
-        <button class="active" onclick="showForm('belanja', event)">Belanja</button>
-        <button onclick="showForm('transfer', event)">Transfer</button>
+        <button class="active" onclick="showForm('belanja', event)">
+            Belanja
+        </button>
+
+        <button onclick="showForm('transfer', event)">
+            Transfer
+        </button>
     </div>
 
     <!-- FORM BELANJA -->
     <div id="belanjaForm" class="form-section active">
-        <label>Tanggal:</label> 
+
+        <label>Tanggal:</label>
         <input type="date" id="tglBelanja">
-        
+
+        <!-- TAMBAHAN: TUJUAN BELANJA -->
+        <label>Tujuan Belanja:</label>
+        <select id="tujuanBelanja">
+            <option value="leora">LEORA</option>
+            <option value="iki">IKI</option>
+        </select>
+
         <div class="nota-box">
-            <label>Nama Barang:</label> 
+
+            <label>Nama Barang:</label>
             <input type="text" id="itemBarang" placeholder="">
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+
                 <div>
-                    <label>Qty:</label> 
-                    <input type="number" id="itemQty" value="1" oninput="hitungPreview()">
+                    <label>Qty:</label>
+                    <input
+                        type="number"
+                        id="itemQty"
+                        value="1"
+                        oninput="hitungPreview()"
+                    >
                 </div>
+
                 <div>
-                    <label>Harga Satuan:</label> 
-                    <input type="number" id="itemHarga" placeholder="0" oninput="hitungPreview()">
+                    <label>Harga Satuan:</label>
+                    <input
+                        type="number"
+                        id="itemHarga"
+                        placeholder="0"
+                        oninput="hitungPreview()"
+                    >
                 </div>
+
             </div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
                 <span>Subtotal:</span>
-                <span id="previewSubtotal" style="color: var(--text-main); font-weight: 600;">Rp 0</span>
+                <span id="previewSubtotal" style="color: var(--text-main); font-weight: 600;">
+                    Rp 0
+                </span>
             </div>
 
-            <button type="button" onclick="addToCart()" style="width:100%; margin-top:10px; padding:10px; background:transparent; border: 1px dashed var(--accent); color: var(--accent); border-radius:8px; font-weight:600; cursor:pointer;">+ Masukkan ke Draf Antrean</button>
-            
-            <div id="cartList" style="margin-top:12px; max-height: 150px; overflow-y: auto;"></div>
+            <button
+                type="button"
+                onclick="addToCart()"
+                style="width:100%; margin-top:10px; padding:10px; background:transparent; border:1px dashed var(--accent); color:var(--accent); border-radius:8px; font-weight:600; cursor:pointer;"
+            >
+                + Masukkan ke Draf Antrean
+            </button>
+
+            <div
+                id="cartList"
+                style="margin-top:12px; max-height:150px; overflow-y:auto;"
+            ></div>
+
         </div>
-        
-        <button type="button" onclick="simpanAntreanBelanja()" class="action-btn">Simpan ke Daftar Antrean</button>
+
+        <button
+            type="button"
+            onclick="simpanAntreanBelanja()"
+            class="action-btn"
+        >
+            Simpan ke Daftar Antrean
+        </button>
+
     </div>
 
     <!-- FORM TRANSFER -->
     <div id="transferForm" class="form-section">
-        <label>Tanggal:</label> 
+
+        <label>Tanggal:</label>
         <input type="date" id="tglTransfer">
-        
-        <label>Nominal Transfer:</label> 
+
+        <label>Nominal Transfer:</label>
         <input type="number" id="nominalTransfer" placeholder="0">
-        
-        <label>Rincian / Catatan:</label> 
-        <input type="text" id="rincianTransfer" placeholder="Misal: BCA...">
-        
-        <button type="button" onclick="simpanAntreanTransfer()" class="action-btn">Simpan Transfer ke Antrean</button>
+
+        <label>Rincian / Catatan:</label>
+        <input
+            type="text"
+            id="rincianTransfer"
+            placeholder="Misal: BCA..."
+        >
+
+        <button
+            type="button"
+            onclick="simpanAntreanTransfer()"
+            class="action-btn"
+        >
+            Simpan Transfer ke Antrean
+        </button>
+
     </div>
+
 </div>
 
 <script>
-    const WEB_URL = "https://script.google.com/macros/s/AKfycbyPwPC3Egm8ogzLIi_WrpTfFYo_OhhnrzR7dDo2HqzmNXmSu8wazOdSwelNH8_A2zQpjw/exec";
-    let cart = [];
 
-    function formatRupiah(angka) {
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
-    }
+const WEB_URL = "https://script.google.com/macros/s/AKfycbyPwPC3Egm8ogzLIi_WrpTfFYo_OhhnrzR7dDo2HqzmNXmSu8wazOdSwelNH8_A2zQpjw/exec";
 
-    function hitungPreview() {
-        let q = Number(document.getElementById('itemQty').value) || 0;
-        let h = Number(document.getElementById('itemHarga').value) || 0;
-        document.getElementById('previewSubtotal').innerText = formatRupiah(q * h);
-    }
+let cart = [];
 
-    function showForm(type, evt) {
-        document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
-        document.querySelectorAll('.tab button').forEach(b => b.classList.remove('active'));
-        document.getElementById(type + 'Form').classList.add('active');
-        evt.currentTarget.classList.add('active');
-    }
 
-    function addToCart() {
-        const b = document.getElementById('itemBarang').value.trim();
-        const q = document.getElementById('itemQty').value;
-        const h = document.getElementById('itemHarga').value;
-        if(b && q && h) {
-            cart.push({b, q, h});
-            renderCart();
-            document.getElementById('itemBarang').value = '';
-            document.getElementById('itemQty').value = '1';
-            document.getElementById('itemHarga').value = '';
-            document.getElementById('previewSubtotal').innerText = 'Rp 0';
-            document.getElementById('itemBarang').focus();
-        } else {
-            alert('Lengkapi nama barang, qty, dan harga!');
-        }
-    }
+function formatRupiah(angka) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0
+    }).format(angka);
+}
 
-    function renderCart() {
-        const list = document.getElementById('cartList');
-        if (cart.length === 0) {
-            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 6px 0;">Belum ada item draf</div>`;
-            return;
-        }
-        let html = '';
-        cart.forEach((item, index) => {
-            let subtotal = Number(item.q) * Number(item.h);
-            html += `
-                <div class="cart-item">
-                    <span><b>${item.b}</b> (${item.q}x @ ${formatRupiah(item.h)})</span> 
-                    <button type="button" class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>
-                </div>`;
-        });
-        list.innerHTML = html;
-    }
 
-    // Cek Status Antrean Lokal
-    function updateStatusUI() {
-        let queue = JSON.parse(localStorage.getItem('unyil_queue') || '[]');
-        let statusText = document.getElementById('syncStatusText');
-        if (queue.length > 0) {
-            statusText.style.color = 'var(--warning)';
-            statusText.textContent = `⚠️ Ada ${queue.length} antrean belum sync`;
-        } else {
-            statusText.style.color = 'var(--success)';
-            statusText.textContent = `✅ Semua sukses tersync`;
-        }
-    }
+function hitungPreview() {
 
-    function simpanAntreanBelanja() {
-        if (cart.length === 0) { alert('Draf belanja masih kosong!'); return; }
-        let queue = JSON.parse(localStorage.getItem('unyil_queue') || '[]');
-        
-        queue.push({
-            type: 'belanja',
-            tgl: document.getElementById('tglBelanja').value,
-            cartData: JSON.stringify(cart)
+    let q = Number(document.getElementById('itemQty').value) || 0;
+    let h = Number(document.getElementById('itemHarga').value) || 0;
+
+    document.getElementById('previewSubtotal').innerText =
+        formatRupiah(q * h);
+}
+
+
+function showForm(type, evt) {
+
+    document.querySelectorAll('.form-section')
+        .forEach(f => f.classList.remove('active'));
+
+    document.querySelectorAll('.tab button')
+        .forEach(b => b.classList.remove('active'));
+
+    document.getElementById(type + 'Form')
+        .classList.add('active');
+
+    evt.currentTarget.classList.add('active');
+}
+
+
+function addToCart() {
+
+    const b = document.getElementById('itemBarang').value.trim();
+    const q = document.getElementById('itemQty').value;
+    const h = document.getElementById('itemHarga').value;
+
+    if (b && q && h) {
+
+        cart.push({
+            b,
+            q,
+            h
         });
 
-        localStorage.setItem('unyil_queue', JSON.stringify(queue));
-        cart = [];
         renderCart();
-        updateStatusUI();
-        alert('Berhasil disimpan ke antrean lokal! Klik "Sync Sekarang" jika ingin kirim ke Sheet.');
+
+        document.getElementById('itemBarang').value = '';
+        document.getElementById('itemQty').value = '1';
+        document.getElementById('itemHarga').value = '';
+
+        document.getElementById('previewSubtotal').innerText = 'Rp 0';
+
+        document.getElementById('itemBarang').focus();
+
+    } else {
+
+        alert('Lengkapi nama barang, qty, dan harga!');
+
+    }
+}
+
+
+function renderCart() {
+
+    const list = document.getElementById('cartList');
+
+    if (cart.length === 0) {
+
+        list.innerHTML = `
+            <div style="text-align:center; color:var(--text-muted); font-size:0.75rem; padding:6px 0;">
+                Belum ada item draf
+            </div>
+        `;
+
+        return;
     }
 
-    function simpanAntreanTransfer() {
-        let nominal = document.getElementById('nominalTransfer').value;
-        let rincian = document.getElementById('rincianTransfer').value;
-        if (!nominal || !rincian) { alert('Lengkapi data transfer!'); return; }
+    let html = '';
 
-        let queue = JSON.parse(localStorage.getItem('unyil_queue') || '[]');
-        
-        queue.push({
-            type: 'transfer',
-            tgl: document.getElementById('tglTransfer').value,
-            nominal: nominal,
-            rincian: rincian
-        });
+    cart.forEach((item, index) => {
 
-        localStorage.setItem('unyil_queue', JSON.stringify(queue));
-        document.getElementById('nominalTransfer').value = '';
-        document.getElementById('rincianTransfer').value = '';
-        updateStatusUI();
-        alert('Transfer disimpan ke antrean lokal!');
-    }
+        let subtotal =
+            Number(item.q) * Number(item.h);
 
-    async function prosesSync() {
-        let queue = JSON.parse(localStorage.getItem('unyil_queue') || '[]');
-        if (queue.length === 0) { alert('Tidak ada antrean yang perlu disync.'); return; }
+        html += `
+            <div class="cart-item">
 
-        let key = localStorage.getItem('srf_key') || 'SRF';
-        let statusText = document.getElementById('syncStatusText');
+                <span>
+                    <b>${item.b}</b>
+                    (${item.q}x @ ${formatRupiah(item.h)})
+                </span>
+
+                <button
+                    type="button"
+                    class="btn-delete"
+                    onclick="cart.splice(${index},1); renderCart();"
+                >
+                    Hapus
+                </button>
+
+            </div>
+        `;
+    });
+
+    list.innerHTML = html;
+}
+
+
+function updateStatusUI() {
+
+    let queue =
+        JSON.parse(localStorage.getItem('unyil_queue') || '[]');
+
+    let statusText =
+        document.getElementById('syncStatusText');
+
+    if (queue.length > 0) {
+
         statusText.style.color = 'var(--warning)';
-        statusText.textContent = '🔄 Sedang mengirim...';
 
-        let sisa = [];
-        for (let item of queue) {
-            let params = new URLSearchParams();
-            params.append("key", key);
-            params.append("type", item.type);
-            params.append("tgl", item.tgl);
-            if(item.type === 'belanja') {
-                params.append("cartData", item.cartData);
-            } else {
-                params.append("nominal", item.nominal);
-                params.append("rincian", item.rincian);
-            }
+        statusText.textContent =
+            `⚠️ Ada ${queue.length} antrean belum sync`;
 
-            try {
-                await fetch(WEB_URL, { method: "POST", mode: "no-cors", body: params });
-            } catch(e) {
-                sisa.push(item);
-            }
-        }
+    } else {
 
-        localStorage.setItem('unyil_queue', JSON.stringify(sisa));
-        updateStatusUI();
-        if(sisa.length === 0) {
-            alert('✅ Sinkronisasi sukses! Data sudah masuk Google Sheet.');
-        } else {
-            alert('⚠️ Sebagian antrean gagal terkirim, periksa koneksi.');
-        }
+        statusText.style.color = 'var(--success)';
+
+        statusText.textContent =
+            `✅ Semua sukses tersync`;
+
+    }
+}
+
+
+/* SIMPAN BELANJA KE ANTREAN */
+function simpanAntreanBelanja() {
+
+    if (cart.length === 0) {
+
+        alert('Draf belanja masih kosong!');
+        return;
+
     }
 
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('tglBelanja').value = today;
-    document.getElementById('tglTransfer').value = today;
+    let queue =
+        JSON.parse(localStorage.getItem('unyil_queue') || '[]');
+
+    queue.push({
+
+        type: 'belanja',
+
+        tgl:
+            document.getElementById('tglBelanja').value,
+
+        // TUJUAN DIAMBIL DARI PILIHAN LEORA / IKI
+        tujuan:
+            document.getElementById('tujuanBelanja').value,
+
+        cartData:
+            JSON.stringify(cart)
+
+    });
+
+    localStorage.setItem(
+        'unyil_queue',
+        JSON.stringify(queue)
+    );
+
+    cart = [];
+
     renderCart();
+
     updateStatusUI();
+
+    alert(
+        'Berhasil disimpan ke antrean lokal! Klik "Sync Sekarang" jika ingin kirim ke Sheet.'
+    );
+}
+
+
+/* SIMPAN TRANSFER KE ANTREAN */
+function simpanAntreanTransfer() {
+
+    let nominal =
+        document.getElementById('nominalTransfer').value;
+
+    let rincian =
+        document.getElementById('rincianTransfer').value;
+
+    if (!nominal || !rincian) {
+
+        alert('Lengkapi data transfer!');
+        return;
+
+    }
+
+    let queue =
+        JSON.parse(localStorage.getItem('unyil_queue') || '[]');
+
+    queue.push({
+
+        type: 'transfer',
+
+        tgl:
+            document.getElementById('tglTransfer').value,
+
+        nominal:
+            nominal,
+
+        rincian:
+            rincian
+
+    });
+
+    localStorage.setItem(
+        'unyil_queue',
+        JSON.stringify(queue)
+    );
+
+    document.getElementById('nominalTransfer').value = '';
+    document.getElementById('rincianTransfer').value = '';
+
+    updateStatusUI();
+
+    alert('Transfer disimpan ke antrean lokal!');
+}
+
+
+/* PROSES SYNC */
+async function prosesSync() {
+
+    let queue =
+        JSON.parse(localStorage.getItem('unyil_queue') || '[]');
+
+    if (queue.length === 0) {
+
+        alert('Tidak ada antrean yang perlu disync.');
+        return;
+
+    }
+
+    let key =
+        localStorage.getItem('srf_key') || 'SRF';
+
+    let statusText =
+        document.getElementById('syncStatusText');
+
+    statusText.style.color = 'var(--warning)';
+    statusText.textContent = '🔄 Sedang mengirim...';
+
+    let sisa = [];
+
+    for (let item of queue) {
+
+        let params = new URLSearchParams();
+
+        params.append("key", key);
+        params.append("type", item.type);
+        params.append("tgl", item.tgl);
+
+        if (item.type === 'belanja') {
+
+            // INI YANG SEBELUMNYA HILANG
+            params.append("tujuan", item.tujuan);
+
+            params.append("cartData", item.cartData);
+
+        } else {
+
+            params.append("nominal", item.nominal);
+            params.append("rincian", item.rincian);
+
+        }
+
+        try {
+
+            await fetch(WEB_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: params
+            });
+
+        } catch (e) {
+
+            sisa.push(item);
+
+        }
+
+    }
+
+    localStorage.setItem(
+        'unyil_queue',
+        JSON.stringify(sisa)
+    );
+
+    updateStatusUI();
+
+    if (sisa.length === 0) {
+
+        alert(
+            '✅ Sinkronisasi sukses! Data sudah dikirim ke Google Sheet.'
+        );
+
+    } else {
+
+        alert(
+            '⚠️ Sebagian antrean gagal terkirim, periksa koneksi.'
+        );
+
+    }
+}
+
+
+/* TANGGAL HARI INI */
+const today =
+    new Date().toISOString().split('T')[0];
+
+document.getElementById('tglBelanja').value =
+    today;
+
+document.getElementById('tglTransfer').value =
+    today;
+
+
+/* TAMPILKAN CART */
+renderCart();
+
+/* UPDATE STATUS */
+updateStatusUI();
+
 </script>
+
 </body>
 </html>
+```
