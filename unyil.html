@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nota - unyil</title>
+    <title>Nota - UNYIL</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,7 +19,12 @@
             --border: #334155;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
 
         body {
             background-color: var(--bg-main);
@@ -66,7 +70,9 @@
             transition: opacity 0.2s;
         }
 
-        .btn-sync:hover { opacity: 0.9; }
+        .btn-sync:hover {
+            opacity: 0.9;
+        }
 
         .header-top {
             display: flex;
@@ -82,7 +88,9 @@
             font-weight: 500;
         }
 
-        .back-link:hover { color: var(--text-main); }
+        .back-link:hover {
+            color: var(--text-main);
+        }
 
         h2 {
             color: var(--text-main);
@@ -113,8 +121,13 @@
             border-bottom: 2px solid var(--accent);
         }
 
-        .form-section { display: none; }
-        .form-section.active { display: block; }
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
 
         label {
             display: block;
@@ -124,8 +137,7 @@
             color: var(--text-muted);
         }
 
-        input,
-        select {
+        input {
             width: 100%;
             padding: 10px;
             margin-top: 4px;
@@ -137,8 +149,7 @@
             outline: none;
         }
 
-        input:focus,
-        select:focus {
+        input:focus {
             border-color: var(--accent);
         }
 
@@ -221,13 +232,6 @@
         <label>Tanggal:</label>
         <input type="date" id="tglBelanja">
 
-        <!-- TAMBAHAN: TUJUAN BELANJA -->
-        <label>Tujuan Belanja:</label>
-        <select id="tujuanBelanja">
-            <option value="leora">LEORA</option>
-            <option value="iki">IKI</option>
-        </select>
-
         <div class="nota-box">
 
             <label>Nama Barang:</label>
@@ -259,7 +263,11 @@
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
                 <span>Subtotal:</span>
-                <span id="previewSubtotal" style="color: var(--text-main); font-weight: 600;">
+
+                <span
+                    id="previewSubtotal"
+                    style="color: var(--text-main); font-weight: 600;"
+                >
                     Rp 0
                 </span>
             </div>
@@ -323,7 +331,6 @@ const WEB_URL = "https://script.google.com/macros/s/AKfycbyPwPC3Egm8ogzLIi_WrpTf
 
 let cart = [];
 
-
 function formatRupiah(angka) {
     return new Intl.NumberFormat('id-ID', {
         style: 'currency',
@@ -332,9 +339,7 @@ function formatRupiah(angka) {
     }).format(angka);
 }
 
-
 function hitungPreview() {
-
     let q = Number(document.getElementById('itemQty').value) || 0;
     let h = Number(document.getElementById('itemHarga').value) || 0;
 
@@ -342,9 +347,7 @@ function hitungPreview() {
         formatRupiah(q * h);
 }
 
-
 function showForm(type, evt) {
-
     document.querySelectorAll('.form-section')
         .forEach(f => f.classList.remove('active'));
 
@@ -356,7 +359,6 @@ function showForm(type, evt) {
 
     evt.currentTarget.classList.add('active');
 }
-
 
 function addToCart() {
 
@@ -389,7 +391,6 @@ function addToCart() {
     }
 }
 
-
 function renderCart() {
 
     const list = document.getElementById('cartList');
@@ -409,9 +410,6 @@ function renderCart() {
 
     cart.forEach((item, index) => {
 
-        let subtotal =
-            Number(item.q) * Number(item.h);
-
         html += `
             <div class="cart-item">
 
@@ -430,11 +428,11 @@ function renderCart() {
 
             </div>
         `;
+
     });
 
     list.innerHTML = html;
 }
-
 
 function updateStatusUI() {
 
@@ -461,15 +459,11 @@ function updateStatusUI() {
     }
 }
 
-
-/* SIMPAN BELANJA KE ANTREAN */
 function simpanAntreanBelanja() {
 
     if (cart.length === 0) {
-
         alert('Draf belanja masih kosong!');
         return;
-
     }
 
     let queue =
@@ -481,10 +475,6 @@ function simpanAntreanBelanja() {
 
         tgl:
             document.getElementById('tglBelanja').value,
-
-        // TUJUAN DIAMBIL DARI PILIHAN LEORA / IKI
-        tujuan:
-            document.getElementById('tujuanBelanja').value,
 
         cartData:
             JSON.stringify(cart)
@@ -499,7 +489,6 @@ function simpanAntreanBelanja() {
     cart = [];
 
     renderCart();
-
     updateStatusUI();
 
     alert(
@@ -507,8 +496,6 @@ function simpanAntreanBelanja() {
     );
 }
 
-
-/* SIMPAN TRANSFER KE ANTREAN */
 function simpanAntreanTransfer() {
 
     let nominal =
@@ -518,10 +505,8 @@ function simpanAntreanTransfer() {
         document.getElementById('rincianTransfer').value;
 
     if (!nominal || !rincian) {
-
         alert('Lengkapi data transfer!');
         return;
-
     }
 
     let queue =
@@ -555,18 +540,14 @@ function simpanAntreanTransfer() {
     alert('Transfer disimpan ke antrean lokal!');
 }
 
-
-/* PROSES SYNC */
 async function prosesSync() {
 
     let queue =
         JSON.parse(localStorage.getItem('unyil_queue') || '[]');
 
     if (queue.length === 0) {
-
         alert('Tidak ada antrean yang perlu disync.');
         return;
-
     }
 
     let key =
@@ -590,9 +571,6 @@ async function prosesSync() {
 
         if (item.type === 'belanja') {
 
-            // INI YANG SEBELUMNYA HILANG
-            params.append("tujuan", item.tujuan);
-
             params.append("cartData", item.cartData);
 
         } else {
@@ -615,7 +593,6 @@ async function prosesSync() {
             sisa.push(item);
 
         }
-
     }
 
     localStorage.setItem(
@@ -628,7 +605,7 @@ async function prosesSync() {
     if (sisa.length === 0) {
 
         alert(
-            '✅ Sinkronisasi sukses! Data sudah dikirim ke Google Sheet.'
+            '✅ Sinkronisasi selesai!'
         );
 
     } else {
@@ -640,26 +617,16 @@ async function prosesSync() {
     }
 }
 
-
-/* TANGGAL HARI INI */
 const today =
     new Date().toISOString().split('T')[0];
 
-document.getElementById('tglBelanja').value =
-    today;
+document.getElementById('tglBelanja').value = today;
+document.getElementById('tglTransfer').value = today;
 
-document.getElementById('tglTransfer').value =
-    today;
-
-
-/* TAMPILKAN CART */
 renderCart();
-
-/* UPDATE STATUS */
 updateStatusUI();
 
 </script>
 
 </body>
 </html>
-
