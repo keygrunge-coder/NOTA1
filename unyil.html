@@ -17,6 +17,7 @@
             --accent-hover: #2563EB;
             --danger: #EF4444;
             --success: #10B981;
+            --warning: #F59E0B;
             --border: #334155;
         }
 
@@ -42,44 +43,83 @@
             height: fit-content;
         }
 
-        h2 { text-align: center; color: var(--text-main); margin-bottom: 20px; font-size: 1.25rem; font-weight: 700; }
+        /* Bar Status & Tombol Sync */
+        .sync-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-input);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            font-size: 0.8rem;
+        }
 
-        .tab { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .tab button { flex: 1; padding: 12px; cursor: pointer; border: none; background: transparent; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s; }
+        .btn-sync {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: opacity 0.2s;
+        }
+        .btn-sync:hover { opacity: 0.9; }
+
+        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+        .back-link:hover { color: var(--text-main); }
+        h2 { color: var(--text-main); font-size: 1.15rem; font-weight: 700; text-align: center; }
+
+        .tab { display: flex; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .tab button { flex: 1; padding: 10px; cursor: pointer; border: none; background: transparent; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s; }
         .tab button.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
         .form-section { display: none; }
         .form-section.active { display: block; }
 
-        label { display: block; margin-top: 12px; font-weight: 500; font-size: 0.85rem; color: var(--text-muted); }
-        input { width: 100%; padding: 12px; margin-top: 6px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        label { display: block; margin-top: 10px; font-weight: 500; font-size: 0.8rem; color: var(--text-muted); }
+        input { width: 100%; padding: 10px; margin-top: 4px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
         input:focus { border-color: var(--accent); }
 
-        .nota-box { background: var(--bg-input); padding: 16px; border-radius: 12px; margin: 16px 0; border: 1px dashed var(--border); }
+        .nota-box { background: var(--bg-input); padding: 14px; border-radius: 10px; margin: 10px 0; border: 1px dashed var(--border); }
         
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
         
-        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: background 0.2s; }
+        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: 600; transition: background 0.2s; }
         .btn-delete:hover { background: rgba(239, 68, 68, 0.2); }
 
-        button.submit { width: 100%; background: var(--success); color: white; padding: 14px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 16px; transition: opacity 0.2s; }
+        button.submit { width: 100%; background: var(--success); color: white; padding: 12px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 12px; transition: opacity 0.2s; }
         button.submit:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0.7; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Input Mang Unyil</h2>
+    <div class="header-top">
+        <a href="index.html" class="back-link">&larr; Menu</a>
+        <h2>Input Mang Unyil</h2>
+        <div></div>
+    </div>
+
+    <!-- Status & Tombol Sync -->
+    <div class="sync-bar">
+        <span id="syncStatusText" style="color: var(--warning);">⚠️ Memeriksa antrean...</span>
+        <button class="btn-sync" onclick="prosesSyncBackground()">🔄 Sync Sekarang</button>
+    </div>
+
     <div class="tab">
         <button class="active" onclick="showForm('belanja', event)">Belanja</button>
         <button onclick="showForm('transfer', event)">Transfer</button>
     </div>
 
     <!-- FORM BELANJA -->
-    <form id="belanjaForm" class="form-section active">
-        <input type="hidden" name="type" value="belanja">
+    <div id="belanjaForm" class="form-section active">
         <label>Tanggal:</label> 
-        <input type="date" name="tgl" id="tglBelanja" required>
+        <input type="date" id="tglBelanja" required>
         
         <div class="nota-box">
             <label>Barang:</label> 
@@ -88,42 +128,45 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <div>
                     <label>Qty:</label> 
-                    <input type="number" id="itemQty" placeholder="1" oninput="hitungPreviewSubtotal()">
+                    <input type="number" id="itemQty" value="1" min="1" oninput="hitungPreviewSubtotal()">
                 </div>
                 <div>
                     <label>Harga Satuan:</label> 
-                    <input type="number" id="itemHarga" placeholder="0" oninput="hitungPreviewSubtotal()">
+                    <input type="text" id="hargaInput" placeholder="0" oninput="formatInputHarga(this)">
+                    <input type="hidden" id="itemHarga" value="0">
                 </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0; font-size: 0.85rem; color: var(--text-muted);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
                 <span>Subtotal Item:</span>
                 <span id="previewSubtotal" style="color: var(--text-main); font-weight: 600;">Rp 0</span>
             </div>
 
-            <button type="button" onclick="addToCart()" style="width:100%; margin-top:8px; padding:12px; background:transparent; border: 1px dashed var(--accent); color: var(--accent); border-radius:8px; font-weight:600; cursor:pointer;">+ Tambah ke Nota</button>
+            <button type="button" onclick="addToCart()" style="width:100%; margin-top:10px; padding:10px; background:transparent; border: 1px dashed var(--accent); color: var(--accent); border-radius:8px; font-weight:600; cursor:pointer;">+ Tambah ke Nota</button>
             
-            <div id="cartList" style="margin-top:15px; max-height: 180px; overflow-y: auto;"></div>
+            <div id="cartList" style="margin-top:12px; max-height: 150px; overflow-y: auto;"></div>
         </div>
         
-        <input type="hidden" name="cartData" id="cartData">
-        <button type="submit" id="btnKirimBelanja" class="submit">Kirim Nota ke Sheet</button>
-    </form>
+        <button type="button" id="btnKirimBelanja" class="submit" onclick="submitBelanja()">Kirim Nota ke Sheet</button>
+    </div>
 
     <!-- FORM TRANSFER -->
-    <form id="transferForm" class="form-section">
-        <input type="hidden" name="type" value="transfer">
-        <label>Tanggal:</label> <input type="date" name="tgl" id="tglTransfer" required>
-        <label>Nominal:</label> <input type="number" name="nominal" placeholder="0" required>
-        <label>Rincian:</label> <input type="text" name="rincian" placeholder="Misal: BCA Transfer" required>
-        <button type="submit" id="btnKirimTransfer" class="submit">Kirim Transfer</button>
-    </form>
-
-    <div id="status" style="margin-top:15px; text-align:center; font-size:0.85em; font-weight:500;"></div>
+    <div id="transferForm" class="form-section">
+        <label>Tanggal:</label> 
+        <input type="date" id="tglTransfer" required>
+        
+        <label>Nominal:</label> 
+        <input type="number" id="nominalTransfer" placeholder="0" required>
+        
+        <label>Rincian:</label> 
+        <input type="text" id="rincianTransfer" placeholder="Misal: BCA Transfer" required>
+        
+        <button type="button" id="btnKirimTransfer" class="submit" onclick="submitTransfer()">Kirim Transfer</button>
+    </div>
 
     <!-- RIWAYAT AKTIVITAS -->
-    <div style="margin-top: 25px; border-top: 1px solid var(--border); padding-top: 15px;">
-        <h4 style="margin: 0 0 10px 0; color: var(--text-main); font-size: 0.9em;">Riwayat Aktivitas:</h4>
+    <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 12px;">
+        <h4 style="margin: 0 0 8px 0; color: var(--text-main); font-size: 0.85rem;">Riwayat Aktivitas:</h4>
         <div id="riwayatList"></div>
     </div>
 </div>
@@ -134,6 +177,25 @@
 
     function formatRupiah(angka) {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
+    }
+
+    function formatInputHarga(el) {
+        let angkaBersih = el.value.replace(/[^,\d]/g, '').toString();
+        let split = angkaBersih.split(',');
+        let sisa = split[0].length % 3;
+        let rupiah = split[0].substr(0, sisa);
+        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            let separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+        
+        document.getElementById('itemHarga').value = angkaBersih.replace(/\./g, '');
+        el.value = rupiah ? 'Rp ' + rupiah : '';
+        hitungPreviewSubtotal();
     }
 
     function hitungPreviewSubtotal() {
@@ -153,16 +215,17 @@
         const b = document.getElementById('itemBarang').value.trim();
         const q = document.getElementById('itemQty').value;
         const h = document.getElementById('itemHarga').value;
-        if(b && q && h) {
+        if(b && q && Number(h) > 0) {
             cart.push({b, q, h, id: Date.now()});
             renderCart();
             document.getElementById('itemBarang').value = '';
-            document.getElementById('itemQty').value = '';
-            document.getElementById('itemHarga').value = '';
+            document.getElementById('itemQty').value = '1';
+            document.getElementById('hargaInput').value = '';
+            document.getElementById('itemHarga').value = '0';
             document.getElementById('previewSubtotal').innerText = 'Rp 0';
             document.getElementById('itemBarang').focus();
         } else {
-            alert('Lengkapi nama barang, qty, dan harga!');
+            alert('Lengkapi nama barang, qty, dan harga dengan benar!');
         }
     }
 
@@ -170,17 +233,29 @@
         const list = document.getElementById('cartList');
         list.innerHTML = '';
         if (cart.length === 0) {
-            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px 0;">Nota masih kosong</div>`;
+            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 6px 0;">Nota masih kosong</div>`;
             return;
         }
         cart.forEach((item, index) => {
             let subtotal = Number(item.q) * Number(item.h);
             const div = document.createElement('div');
             div.className = 'cart-item';
-            div.innerHTML = `<span><b>${item.b}</b> (${item.q}x @ ${formatRupiah(item.h)})<br><span style="color:var(--accent); font-size:0.8rem;">Subtotal: ${formatRupiah(subtotal)}</span></span> 
-                             <button class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>`;
+            div.innerHTML = `<span><b>${item.b}</b> (${item.q}x @ ${formatRupiah(item.h)})<br><span style="color:var(--accent); font-size:0.75rem;">Subtotal: ${formatRupiah(subtotal)}</span></span> 
+                             <button type="button" class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>`;
             list.appendChild(div);
         });
+    }
+
+    function updateStatusUI() {
+        let queue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
+        let statusText = document.getElementById('syncStatusText');
+        if (queue.length > 0) {
+            statusText.style.color = 'var(--warning)';
+            statusText.textContent = `⚠️ Ada ${queue.length} antrean belum sync`;
+        } else {
+            statusText.style.color = 'var(--success)';
+            statusText.textContent = `✅ Semua sukses tersync`;
+        }
     }
 
     // --- FITUR RIWAYAT ---
@@ -196,11 +271,15 @@
         let container = document.getElementById('riwayatList');
         if (!container) return;
         container.innerHTML = '';
+        if (history.length === 0) {
+            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.75rem;">Belum ada riwayat</div>`;
+            return;
+        }
         history.forEach((item) => {
             let div = document.createElement('div');
-            div.style.cssText = "background:var(--bg-input); padding:8px 10px; margin-top:6px; border-radius:6px; font-size:0.85em; display:flex; justify-content:space-between; align-items:center; border: 1px solid var(--border);";
+            div.style.cssText = "background:var(--bg-input); padding:6px 8px; margin-top:4px; border-radius:6px; font-size:0.8rem; display:flex; justify-content:space-between; align-items:center; border: 1px solid var(--border);";
             div.innerHTML = `<span><b>[${item.waktu}]</b> ${item.text}</span>
-                             <button onclick="hapusRiwayat(${item.id})" class="btn-delete">Hapus</button>`;
+                             <button type="button" onclick="hapusRiwayat(${item.id})" class="btn-delete">Hapus</button>`;
             container.appendChild(div);
         });
     }
@@ -213,72 +292,80 @@
     }
 
     // --- SUBMIT BELANJA ---
-    document.getElementById('belanjaForm').addEventListener('submit', async e => {
-        e.preventDefault();
+    async function submitBelanja() {
         if (cart.length === 0) { alert('Nota masih kosong!'); return; }
 
         const btn = document.getElementById('btnKirimBelanja');
         btn.disabled = true;
         btn.textContent = 'Memproses...';
 
-        document.getElementById('cartData').value = JSON.stringify(cart);
-        const fd = new FormData(document.getElementById('belanjaForm'));
-
-        let plainObj = {};
-        fd.forEach((value, key) => plainObj[key] = value);
+        let payload = {
+            type: 'belanja',
+            tgl: document.getElementById('tglBelanja').value,
+            cartData: JSON.stringify(cart)
+        };
 
         let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-        offlineQueue.push(plainObj);
+        offlineQueue.push(payload);
         localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
 
         simpanKeRiwayat(`Belanja ${cart.length} item`);
 
         cart = [];
         renderCart();
-        document.getElementById('belanjaForm').reset();
-        resetTanggal();
+        updateStatusUI();
+        document.getElementById('tglBelanja').value = new Date().toISOString().split('T')[0];
 
         await prosesSyncBackground();
 
         btn.disabled = false;
         btn.textContent = 'Kirim Nota ke Sheet';
-    });
+    }
 
     // --- SUBMIT TRANSFER ---
-    document.getElementById('transferForm').addEventListener('submit', async e => {
-        e.preventDefault();
+    async function submitTransfer() {
+        const nominal = document.getElementById('nominalTransfer').value;
+        const rincian = document.getElementById('rincianTransfer').value;
+        const tgl = document.getElementById('tglTransfer').value;
+
+        if (!nominal || !rincian) { alert('Lengkapi data transfer!'); return; }
+
         const btn = document.getElementById('btnKirimTransfer');
         btn.disabled = true;
         btn.textContent = 'Memproses...';
 
-        const fd = new FormData(document.getElementById('transferForm'));
-
-        let plainObj = {};
-        fd.forEach((value, key) => plainObj[key] = value);
+        let payload = {
+            type: 'transfer',
+            tgl: tgl,
+            nominal: nominal,
+            rincian: rincian
+        };
 
         let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-        offlineQueue.push(plainObj);
+        offlineQueue.push(payload);
         localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
 
-        let nominal = document.querySelector('#transferForm [name="nominal"]').value;
         simpanKeRiwayat(`Transfer Rp ${Number(nominal).toLocaleString('id-ID')}`);
 
-        document.getElementById('transferForm').reset();
-        resetTanggal();
+        document.getElementById('nominalTransfer').value = '';
+        document.getElementById('rincianTransfer').value = '';
+        updateStatusUI();
 
         await prosesSyncBackground();
 
         btn.disabled = false;
         btn.textContent = 'Kirim Transfer';
-    });
+    }
 
     // --- ENGINE SYNC LATAR BELAKANG ---
     async function prosesSyncBackground() {
         let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
+        updateStatusUI();
         if (offlineQueue.length === 0) return;
 
-        document.getElementById('status').style.color = '#60A5FA';
-        document.getElementById('status').textContent = '🔄 Menyinkronkan data di latar belakang...';
+        let statusText = document.getElementById('syncStatusText');
+        statusText.style.color = 'var(--warning)';
+        statusText.textContent = '🔄 Menyinkronkan data...';
 
         let sisaQueue = [];
         for (let data of offlineQueue) {
@@ -292,35 +379,24 @@
         }
 
         localStorage.setItem('unyilQueue', JSON.stringify(sisaQueue));
-
-        if (sisaQueue.length === 0) {
-            document.getElementById('status').style.color = 'var(--success)';
-            document.getElementById('status').textContent = '✅ Semua data sukses terkirim ke Sheet!';
-        } else {
-            document.getElementById('status').style.color = '#F59E0B';
-            document.getElementById('status').textContent = '⚠️ Tersimpan di antrean (Menunggu sinyal stabil).';
-        }
+        updateStatusUI();
     }
 
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('tglBelanja').value = today;
     document.getElementById('tglTransfer').value = today;
 
-    function resetTanggal() {
-        document.getElementById('tglBelanja').value = today;
-        document.getElementById('tglTransfer').value = today;
-    }
-
     window.addEventListener('online', () => { prosesSyncBackground(); });
 
     window.addEventListener('DOMContentLoaded', () => {
         renderRiwayat();
         renderCart();
+        updateStatusUI();
         if (navigator.onLine) { prosesSyncBackground(); }
     });
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
+        navigator.serviceWorker.register('sw.js').catch(() => {});
     }
 </script>
 </body>
