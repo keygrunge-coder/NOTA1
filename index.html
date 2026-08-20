@@ -3,331 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Mang Unyil</title>
-    <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-main: #0B0F19;
-            --bg-card: #1E293B;
-            --bg-input: #0F172A;
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            --accent: #3B82F6;
-            --accent-hover: #2563EB;
-            --danger: #EF4444;
-            --success: #10B981;
-            --border: #334155;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-
-        body { 
-            background-color: var(--bg-main); 
-            color: var(--text-main); 
-            min-height: 100vh; 
-            padding: 16px; 
-            display: flex; 
-            justify-content: center; 
-        }
-
-        .container { 
-            width: 100%; 
-            max-width: 480px; 
-            background: var(--bg-card); 
-            padding: 20px; 
-            border-radius: 16px; 
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); 
-            height: fit-content;
-        }
-
-        h2 { text-align: center; color: var(--text-main); margin-bottom: 20px; font-size: 1.25rem; font-weight: 700; }
-
-        .tab { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .tab button { flex: 1; padding: 12px; cursor: pointer; border: none; background: transparent; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s; }
-        .tab button.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
-
-        .form-section { display: none; }
-        .form-section.active { display: block; }
-
-        label { display: block; margin-top: 12px; font-weight: 500; font-size: 0.85rem; color: var(--text-muted); }
-        input { width: 100%; padding: 12px; margin-top: 6px; background-color: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
-        input:focus { border-color: var(--accent); }
-
-        .nota-box { background: var(--bg-input); padding: 16px; border-radius: 12px; margin: 16px 0; border: 1px dashed var(--border); }
-        
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        
-        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: background 0.2s; }
-        .btn-delete:hover { background: rgba(239, 68, 68, 0.2); }
-
-        button.submit { width: 100%; background: var(--success); color: white; padding: 14px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 16px; transition: opacity 0.2s; }
-        button.submit:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0.7; }
-    </style>
+    <title>NOTA1 - Dashboard Navigasi</title>
+    <!-- Tailwind CSS CDN untuk styling yang cepat, ringan, dan responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between font-sans antialiased">
 
-<div class="container">
-    <h2>Input Mang Unyil</h2>
-    <div class="tab">
-        <button class="active" onclick="showForm('belanja', event)">Belanja</button>
-        <button onclick="showForm('transfer', event)">Transfer</button>
-    </div>
-
-    <!-- FORM BELANJA -->
-    <form id="belanjaForm" class="form-section active">
-        <input type="hidden" name="type" value="belanja">
-        <label>Tanggal:</label> 
-        <input type="date" name="tgl" id="tglBelanja" required>
-        
-        <div class="nota-box">
-            <label>Barang:</label> 
-            <input type="text" id="itemBarang" placeholder="Nama barang...">
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div>
-                    <label>Qty:</label> 
-                    <input type="number" id="itemQty" placeholder="1" oninput="hitungPreviewSubtotal()">
-                </div>
-                <div>
-                    <label>Harga Satuan:</label> 
-                    <input type="number" id="itemHarga" placeholder="0" oninput="hitungPreviewSubtotal()">
-                </div>
+    <!-- Header / Banner -->
+    <header class="w-full py-8 px-6 text-center bg-slate-800/50 backdrop-blur-md border-b border-slate-700/50 shadow-lg">
+        <div class="max-w-md mx-auto">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/30 mb-4 text-white text-2xl">
+                <i class="fa-solid fa-folder-open"></i>
             </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0; font-size: 0.85rem; color: var(--text-muted);">
-                <span>Subtotal Item:</span>
-                <span id="previewSubtotal" style="color: var(--text-main); font-weight: 600;">Rp 0</span>
-            </div>
-
-            <button type="button" onclick="addToCart()" style="width:100%; margin-top:8px; padding:12px; background:transparent; border: 1px dashed var(--accent); color: var(--accent); border-radius:8px; font-weight:600; cursor:pointer;">+ Tambah ke Nota</button>
-            
-            <div id="cartList" style="margin-top:15px; max-height: 180px; overflow-y: auto;"></div>
+            <h1 class="text-2xl font-bold tracking-tight text-white">NOTA1 Dashboard</h1>
+            <p class="text-sm text-slate-400 mt-1">Pilih halaman cepat di bawah ini</p>
         </div>
+    </header>
+
+    <!-- Main Content / Daftar Menu -->
+    <main class="w-full max-w-md mx-auto px-4 py-6 flex-grow flex flex-col gap-3.5">
         
-        <input type="hidden" name="cartData" id="cartData">
-        <button type="submit" id="btnKirimBelanja" class="submit">Kirim Nota ke Sheet</button>
-    </form>
+        <!-- Tombol Aldi -->
+        <a href="aldi.html" class="group flex items-center justify-between p-4 rounded-2xl bg-slate-800/80 hover:bg-blue-600/10 border border-slate-700/60 hover:border-blue-500/50 transition-all duration-300 shadow-sm active:scale-[0.98]">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-lg group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-slate-200 group-hover:text-blue-400 transition-colors">Aldi</h2>
+                    <p class="text-xs text-slate-400">Buka halaman aldi.html</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all"></i>
+        </a>
 
-    <!-- FORM TRANSFER -->
-    <form id="transferForm" class="form-section">
-        <input type="hidden" name="type" value="transfer">
-        <label>Tanggal:</label> <input type="date" name="tgl" id="tglTransfer" required>
-        <label>Nominal:</label> <input type="number" name="nominal" placeholder="0" required>
-        <label>Rincian:</label> <input type="text" name="rincian" placeholder="Misal: BCA Transfer" required>
-        <button type="submit" id="btnKirimTransfer" class="submit">Kirim Transfer</button>
-    </form>
+        <!-- Tombol Leora -->
+        <a href="leora.html" class="group flex items-center justify-between p-4 rounded-2xl bg-slate-800/80 hover:bg-indigo-600/10 border border-slate-700/60 hover:border-indigo-500/50 transition-all duration-300 shadow-sm active:scale-[0.98]">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-lg group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-slate-200 group-hover:text-indigo-400 transition-colors">Leora</h2>
+                    <p class="text-xs text-slate-400">Buka halaman leora.html</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all"></i>
+        </a>
 
-    <div id="status" style="margin-top:15px; text-align:center; font-size:0.85em; font-weight:500;"></div>
+        <!-- Tombol Unyil -->
+        <a href="unyil.html" class="group flex items-center justify-between p-4 rounded-2xl bg-slate-800/80 hover:bg-emerald-600/10 border border-slate-700/60 hover:border-emerald-500/50 transition-all duration-300 shadow-sm active:scale-[0.98]">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-slate-200 group-hover:text-emerald-400 transition-colors">Unyil</h2>
+                    <p class="text-xs text-slate-400">Buka halaman unyil.html</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all"></i>
+        </a>
 
-    <!-- RIWAYAT AKTIVITAS -->
-    <div style="margin-top: 25px; border-top: 1px solid var(--border); padding-top: 15px;">
-        <h4 style="margin: 0 0 10px 0; color: var(--text-main); font-size: 0.9em;">Riwayat Aktivitas:</h4>
-        <div id="riwayatList"></div>
-    </div>
-</div>
+        <!-- Tombol Yusa (Baru) -->
+        <a href="yusa.html" class="group flex items-center justify-between p-4 rounded-2xl bg-slate-800/80 hover:bg-amber-600/10 border border-slate-700/60 hover:border-amber-500/50 transition-all duration-300 shadow-sm active:scale-[0.98]">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-lg group-hover:bg-amber-500 group-hover:text-white transition-all duration-300">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-slate-200 group-hover:text-amber-400 transition-colors">Yusa</h2>
+                    <p class="text-xs text-slate-400">Buka halaman yusa.html</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all">*</i>
+        </a>
 
-<script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyPwPC3Egm8ogzLIi_WrpTfFYo_OhhnrzR7dDo2HqzmNXmSu8wazOdSwelNH8_A2zQpjw/exec';
-    
-    // KUNCI RAHASIA (Otomatis dikirim ke Google Apps Script di balik layar)
-    const SECRET_KEY = 'MASUKKAN_KUNCI_RAHASIA_ANDA_DISINI';
+    </main>
 
-    let cart = [];
+    <!-- Footer -->
+    <footer class="w-full py-4 text-center text-xs text-slate-500 border-t border-slate-800">
+        &copy; 2026 NOTA1 &bull; Mobile Ready
+    </footer>
 
-    function formatRupiah(angka) {
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
-    }
-
-    function hitungPreviewSubtotal() {
-        let q = Number(document.getElementById('itemQty').value) || 0;
-        let h = Number(document.getElementById('itemHarga').value) || 0;
-        document.getElementById('previewSubtotal').innerText = formatRupiah(q * h);
-    }
-
-    function showForm(type, evt) {
-        document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
-        document.querySelectorAll('.tab button').forEach(b => b.classList.remove('active'));
-        document.getElementById(type + 'Form').classList.add('active');
-        evt.currentTarget.classList.add('active');
-    }
-
-    function addToCart() {
-        const b = document.getElementById('itemBarang').value.trim();
-        const q = document.getElementById('itemQty').value;
-        const h = document.getElementById('itemHarga').value;
-        if(b && q && h) {
-            cart.push({b, q, h, id: Date.now()});
-            renderCart();
-            document.getElementById('itemBarang').value = '';
-            document.getElementById('itemQty').value = '';
-            document.getElementById('itemHarga').value = '';
-            document.getElementById('previewSubtotal').innerText = 'Rp 0';
-            document.getElementById('itemBarang').focus();
-        } else {
-            alert('Lengkapi nama barang, qty, dan harga!');
-        }
-    }
-
-    function renderCart() {
-        const list = document.getElementById('cartList');
-        list.innerHTML = '';
-        if (cart.length === 0) {
-            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px 0;">Nota masih kosong</div>`;
-            return;
-        }
-        cart.forEach((item, index) => {
-            let subtotal = Number(item.q) * Number(item.h);
-            const div = document.createElement('div');
-            div.className = 'cart-item';
-            div.innerHTML = `<span><b>${item.b}</b> (${item.q}x @ ${formatRupiah(item.h)})<br><span style="color:var(--accent); font-size:0.8rem;">Subtotal: ${formatRupiah(subtotal)}</span></span> 
-                             <button class="btn-delete" onclick="cart.splice(${index},1); renderCart();">Hapus</button>`;
-            list.appendChild(div);
-        });
-    }
-
-    // --- FITUR RIWAYAT ---
-    function simpanKeRiwayat(teksRangkuman) {
-        let history = JSON.parse(localStorage.getItem('unyilHistory') || '[]');
-        history.unshift({ id: Date.now(), text: teksRangkuman, waktu: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-        localStorage.setItem('unyilHistory', JSON.stringify(history));
-        renderRiwayat();
-    }
-
-    function renderRiwayat() {
-        let history = JSON.parse(localStorage.getItem('unyilHistory') || '[]');
-        let container = document.getElementById('riwayatList');
-        if (!container) return;
-        container.innerHTML = '';
-        history.forEach((item) => {
-            let div = document.createElement('div');
-            div.style.cssText = "background:var(--bg-input); padding:8px 10px; margin-top:6px; border-radius:6px; font-size:0.85em; display:flex; justify-content:space-between; align-items:center; border: 1px solid var(--border);";
-            div.innerHTML = `<span><b>[${item.waktu}]</b> ${item.text}</span>
-                             <button onclick="hapusRiwayat(${item.id})" class="btn-delete">Hapus</button>`;
-            container.appendChild(div);
-        });
-    }
-
-    window.hapusRiwayat = function(id) {
-        let history = JSON.parse(localStorage.getItem('unyilHistory') || '[]');
-        history = history.filter(item => item.id !== id);
-        localStorage.setItem('unyilHistory', JSON.stringify(history));
-        renderRiwayat();
-    }
-
-    // --- SUBMIT BELANJA ---
-    document.getElementById('belanjaForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        if (cart.length === 0) { alert('Nota masih kosong!'); return; }
-
-        const btn = document.getElementById('btnKirimBelanja');
-        btn.disabled = true;
-        btn.textContent = 'Memproses...';
-
-        document.getElementById('cartData').value = JSON.stringify(cart);
-        const fd = new FormData(document.getElementById('belanjaForm'));
-        fd.append('key', SECRET_KEY);
-
-        let plainObj = {};
-        fd.forEach((value, key) => plainObj[key] = value);
-
-        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-        offlineQueue.push(plainObj);
-        localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
-
-        simpanKeRiwayat(`Belanja ${cart.length} item`);
-
-        cart = [];
-        renderCart();
-        document.getElementById('belanjaForm').reset();
-        resetTanggal();
-
-        await prosesSyncBackground();
-
-        btn.disabled = false;
-        btn.textContent = 'Kirim Nota ke Sheet';
-    });
-
-    // --- SUBMIT TRANSFER ---
-    document.getElementById('transferForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        const btn = document.getElementById('btnKirimTransfer');
-        btn.disabled = true;
-        btn.textContent = 'Memproses...';
-
-        const fd = new FormData(document.getElementById('transferForm'));
-        fd.append('key', SECRET_KEY);
-
-        let plainObj = {};
-        fd.forEach((value, key) => plainObj[key] = value);
-
-        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-        offlineQueue.push(plainObj);
-        localStorage.setItem('unyilQueue', JSON.stringify(offlineQueue));
-
-        let nominal = document.querySelector('#transferForm [name="nominal"]').value;
-        simpanKeRiwayat(`Transfer Rp ${Number(nominal).toLocaleString('id-ID')}`);
-
-        document.getElementById('transferForm').reset();
-        resetTanggal();
-
-        await prosesSyncBackground();
-
-        btn.disabled = false;
-        btn.textContent = 'Kirim Transfer';
-    });
-
-    // --- ENGINE SYNC LATAR BELAKANG ---
-    async function prosesSyncBackground() {
-        let offlineQueue = JSON.parse(localStorage.getItem('unyilQueue') || '[]');
-        if (offlineQueue.length === 0) return;
-
-        document.getElementById('status').style.color = '#60A5FA';
-        document.getElementById('status').textContent = '🔄 Menyinkronkan data di latar belakang...';
-
-        let sisaQueue = [];
-        for (let data of offlineQueue) {
-            let fd = new FormData();
-            for (let k in data) fd.append(k, data[k]);
-            try {
-                await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: fd });
-            } catch(e) {
-                sisaQueue.push(data);
-            }
-        }
-
-        localStorage.setItem('unyilQueue', JSON.stringify(sisaQueue));
-
-        if (sisaQueue.length === 0) {
-            document.getElementById('status').style.color = 'var(--success)';
-            document.getElementById('status').textContent = '✅ Semua data sukses terkirim ke Sheet!';
-        } else {
-            document.getElementById('status').style.color = '#F59E0B';
-            document.getElementById('status').textContent = '⚠️ Tersimpan di antrean (Menunggu sinyal stabil).';
-        }
-    }
-
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('tglBelanja').value = today;
-    document.getElementById('tglTransfer').value = today;
-
-    function resetTanggal() {
-        document.getElementById('tglBelanja').value = today;
-        document.getElementById('tglTransfer').value = today;
-    }
-
-    window.addEventListener('online', () => { prosesSyncBackground(); });
-
-    window.addEventListener('DOMContentLoaded', () => {
-        renderRiwayat();
-        renderCart();
-        if (navigator.onLine) { prosesSyncBackground(); }
-    });
-
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
-</script>
 </body>
 </html>
